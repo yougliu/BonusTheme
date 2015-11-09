@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ThemeRom</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title">Theme Park</string>
+    <string name="wallpaper_recommend">Wallpaper recommend</string>
+    <string name="theme_recommend">Theme recommend</string>
+</resources>
