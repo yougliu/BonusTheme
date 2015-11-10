@@ -3,12 +3,23 @@ package themerom.bonus.com.themerom.activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import themerom.bonus.com.themerom.R;
+import themerom.bonus.com.themerom.adapter.ThemeAdapter;
+import themerom.bonus.com.themerom.entity.ThemeEntity;
+import themerom.bonus.com.themerom.entity.WallpaperEntity;
 import themerom.bonus.com.themerom.utils.ThemeUitl;
 import themerom.bonus.com.themerom.view.GalleryViewPager;
 
@@ -21,6 +32,12 @@ public class HomeMainActivity extends AppCompatActivity {
     private GridView mWallpaperGrid, mThemeGrid;
     private int[] imageArray = {R.drawable.roll_1, R.drawable.roll_2, R.drawable.roll_3};
     private static final int SWITCH_TIME = 3000;
+
+    private List<ThemeEntity> mThemeEntitys = new ArrayList<>();
+    private List<WallpaperEntity> mWallpaperEntitys = new ArrayList<>();
+    private ThemeAdapter mThemeAdapter;
+    private WallpaperAdapter mWallpapaerAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +59,9 @@ public class HomeMainActivity extends AppCompatActivity {
             }
         });
 
+        mThemeAdapter = new ThemeAdapter(HomeMainActivity.this,mThemeEntitys,options,true);
+        mThemeGrid.setAdapter(mThemeAdapter);
+
     }
 
     private void initImageOptions() {
@@ -53,6 +73,54 @@ public class HomeMainActivity extends AppCompatActivity {
                 .showImageOnFail(R.drawable.ic_error)
                 .showImageOnLoading(R.drawable.ic_stub)
                 .build();
+    }
+
+    //jump
+    public void jumpToActivity(View view){
+        int id = view.getId();
+        switch (id){
+            case R.id.id_home_theme:
+                // TODO: 11/10/15
+
+                break;
+
+            case R.id.id_home_wallpaper:
+                break;
+
+            case R.id.id_home_liveWallPaper:
+                break;
+
+        }
+    }
+
+
+    private static class ViewHolder{
+        ImageView imageView;
+        TextView textView;
+    }
+
+
+    class WallpaperAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return null;
+        }
     }
 
 }
