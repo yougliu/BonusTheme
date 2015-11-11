@@ -1,5 +1,9 @@
 package themerom.bonus.com.themerom.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +15,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.util.ArrayList;
@@ -18,9 +27,11 @@ import java.util.List;
 
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.adapter.ThemeAdapter;
+import themerom.bonus.com.themerom.contants.Contacts;
+import themerom.bonus.com.themerom.entity.Preview;
 import themerom.bonus.com.themerom.entity.ThemeEntity;
 import themerom.bonus.com.themerom.entity.WallpaperEntity;
-import themerom.bonus.com.themerom.utils.ThemeUitl;
+import themerom.bonus.com.themerom.utils.ThemeUtil;
 import themerom.bonus.com.themerom.view.GalleryViewPager;
 
 public class HomeMainActivity extends AppCompatActivity {
@@ -37,6 +48,8 @@ public class HomeMainActivity extends AppCompatActivity {
     private List<WallpaperEntity> mWallpaperEntitys = new ArrayList<>();
     private ThemeAdapter mThemeAdapter;
     private WallpaperAdapter mWallpapaerAdapter;
+    private BroadcastReceiver mReceiver;
+    private static final String ACTION_NETWORK_REQUEST = "request.network.action";
 
 
     @Override
@@ -55,13 +68,63 @@ public class HomeMainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
                 //// TODO: 11/9/15
-                ThemeUitl.toast(HomeMainActivity.this, "viewpager ...", 0);
+                ThemeUtil.toast(HomeMainActivity.this, "viewpager ...", 0);
             }
         });
+
+        setNoNetWork();
 
         mThemeAdapter = new ThemeAdapter(HomeMainActivity.this,mThemeEntitys,options,true);
         mThemeGrid.setAdapter(mThemeAdapter);
 
+    }
+
+    //set no net work environment
+    private void setNoNetWork() {
+        if(ThemeUtil.isNetWorkAvailable(HomeMainActivity.this)){
+            initRecomTheme();
+            initRecomWallpaper();
+        }
+        List<Preview> previews = new ArrayList<>();
+        previews.add(new Preview("238*423", "drawable://"+R.drawable.ic_stub));
+        mThemeEntitys.add(new ThemeEntity("1","","",previews));
+        mThemeEntitys.add(new ThemeEntity("2","","",previews));
+        mThemeEntitys.add(new ThemeEntity("3","","",previews));
+
+        mWallpaperEntitys.add(new WallpaperEntity(previews));
+        mWallpaperEntitys.add(new WallpaperEntity(previews));
+
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // TODO: 11/11/15 initReComTheme and initRecomWallpapers 
+            }
+        };
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_NETWORK_REQUEST);
+        registerReceiver(mReceiver,filter);
+    }
+
+    //pull recom wallpaper from net work
+    private void initRecomWallpaper() {
+        // TODO: 11/11/15
+    }
+
+    //pull recom theme from net work
+    private void initRecomTheme() {
+        HttpUtils utils = new HttpUtils();
+        utils.send(HttpRequest.HttpMethod.GET, Contacts.MPATH, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                // TODO: 11/11/15  
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                // TODO: 11/11/15  
+            }
+        });
     }
 
     private void initImageOptions() {
@@ -123,4 +186,12 @@ public class HomeMainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mReceiver != null){
+            unregisterReceiver(mReceiver);
+        }
+    }
 }
