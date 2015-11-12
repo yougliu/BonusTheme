@@ -15,11 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.util.ArrayList;
@@ -27,7 +22,6 @@ import java.util.List;
 
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.adapter.ThemeAdapter;
-import themerom.bonus.com.themerom.contants.Contacts;
 import themerom.bonus.com.themerom.entity.Preview;
 import themerom.bonus.com.themerom.entity.ThemeEntity;
 import themerom.bonus.com.themerom.entity.WallpaperEntity;
@@ -113,18 +107,9 @@ public class HomeMainActivity extends AppCompatActivity {
 
     //pull recom theme from net work
     private void initRecomTheme() {
-        HttpUtils utils = new HttpUtils();
-        utils.send(HttpRequest.HttpMethod.GET, Contacts.MPATH, new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                // TODO: 11/11/15  
-            }
+        // TODO: 11/12/15  android 6.0后，不能使用httpclient，所以不能使用xutils。
+        //此处使用okhttp
 
-            @Override
-            public void onFailure(HttpException e, String s) {
-                // TODO: 11/11/15  
-            }
-        });
     }
 
     private void initImageOptions() {
