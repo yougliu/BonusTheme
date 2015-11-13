@@ -16,12 +16,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.adapter.ThemeAdapter;
+import themerom.bonus.com.themerom.contants.Contacts;
 import themerom.bonus.com.themerom.entity.Preview;
 import themerom.bonus.com.themerom.entity.ThemeEntity;
 import themerom.bonus.com.themerom.entity.WallpaperEntity;
@@ -76,6 +83,8 @@ public class HomeMainActivity extends AppCompatActivity {
     //set no net work environment
     private void setNoNetWork() {
         if(ThemeUtil.isNetWorkAvailable(HomeMainActivity.this)){
+            Contacts.getPixel(HomeMainActivity.this);
+            Contacts.getUri();
             initRecomTheme();
             initRecomWallpaper();
         }
@@ -109,6 +118,22 @@ public class HomeMainActivity extends AppCompatActivity {
     private void initRecomTheme() {
         // TODO: 11/12/15  android 6.0后，不能使用httpclient，所以不能使用xutils。
         //此处使用okhttp
+        //for test to get
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder().url(Contacts.MPATH).build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                // TODO: 11/12/15
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String result = response.body().string();
+
+            }
+        });
 
     }
 
