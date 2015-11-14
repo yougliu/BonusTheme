@@ -14,6 +14,9 @@ import themerom.bonus.com.themerom.utils.ThemeUtil;
  */
 public class Contacts {
 
+    public static final int TOAST_LONG_DURATION = 1;
+    public static final int TOAST_SHORT_DURATION = 0;
+
     private List<Preview> thumbPath = new ArrayList<>();
     private List<Preview> originPath = new ArrayList<>();
     private List<WallpaperEntity> wallpaperPath = new ArrayList<>();
@@ -66,7 +69,7 @@ public class Contacts {
     }
 
     public static void getUri(){
-        String str="http://down.fuli365.net/online_wallpaper";
+        String str="http://muldown.fuli365.net/online_wallpaper";
         HomeWallPath=str+HomeWallPath;
         MPATH=str+MPATH;
         Wallpath=str+Wallpath;

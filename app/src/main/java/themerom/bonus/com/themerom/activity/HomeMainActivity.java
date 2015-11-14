@@ -7,31 +7,29 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.adapter.ThemeAdapter;
+import themerom.bonus.com.themerom.adapter.WallpaperAdapter;
+import themerom.bonus.com.themerom.callback.OkHttpCallback;
 import themerom.bonus.com.themerom.contants.Contacts;
 import themerom.bonus.com.themerom.entity.Preview;
 import themerom.bonus.com.themerom.entity.ThemeEntity;
 import themerom.bonus.com.themerom.entity.WallpaperEntity;
+import themerom.bonus.com.themerom.utils.OkHttpClientManager;
 import themerom.bonus.com.themerom.utils.ThemeUtil;
 import themerom.bonus.com.themerom.view.GalleryViewPager;
 
@@ -43,7 +41,7 @@ public class HomeMainActivity extends AppCompatActivity {
     DisplayImageOptions options;
     private GridView mWallpaperGrid, mThemeGrid;
     private int[] imageArray = {R.drawable.roll_1, R.drawable.roll_2, R.drawable.roll_3};
-    private static final int SWITCH_TIME = 3000;
+    private static final int SWITCH_TIME = 5000;
 
     private List<ThemeEntity> mThemeEntitys = new ArrayList<>();
     private List<WallpaperEntity> mWallpaperEntitys = new ArrayList<>();
@@ -51,6 +49,7 @@ public class HomeMainActivity extends AppCompatActivity {
     private WallpaperAdapter mWallpapaerAdapter;
     private BroadcastReceiver mReceiver;
     private static final String ACTION_NETWORK_REQUEST = "request.network.action";
+    private OkHttpClientManager mClientManager;
 
 
     @Override
@@ -72,11 +71,14 @@ public class HomeMainActivity extends AppCompatActivity {
                 ThemeUtil.toast(HomeMainActivity.this, "viewpager ...", 0);
             }
         });
-
+        mClientManager = OkHttpClientManager.getInstance();
         setNoNetWork();
 
         mThemeAdapter = new ThemeAdapter(HomeMainActivity.this,mThemeEntitys,options,true);
         mThemeGrid.setAdapter(mThemeAdapter);
+
+        mWallpapaerAdapter = new WallpaperAdapter(this,mWallpaperEntitys,options);
+        mWallpaperGrid.setAdapter(mWallpapaerAdapter);
 
     }
 
@@ -91,8 +93,6 @@ public class HomeMainActivity extends AppCompatActivity {
         List<Preview> previews = new ArrayList<>();
         previews.add(new Preview("238*423", "drawable://"+R.drawable.ic_stub));
         mThemeEntitys.add(new ThemeEntity("1","","",previews));
-        mThemeEntitys.add(new ThemeEntity("2","","",previews));
-        mThemeEntitys.add(new ThemeEntity("3","","",previews));
 
         mWallpaperEntitys.add(new WallpaperEntity(previews));
         mWallpaperEntitys.add(new WallpaperEntity(previews));
@@ -112,6 +112,39 @@ public class HomeMainActivity extends AppCompatActivity {
     //pull recom wallpaper from net work
     private void initRecomWallpaper() {
         // TODO: 11/11/15
+        if(mClientManager == null){
+            mClientManager = OkHttpClientManager.getInstance();
+        }
+        Log.d("bonus","------------wallpath = "+Contacts.HomeWallPath);
+        mClientManager.excute(new Request.Builder().url(Contacts.HomeWallPath).build(), new OkHttpCallback() {
+            @Override
+            public void onError(Request request, Exception e) {
+                // TODO: 11/14/15
+            }
+
+            @Override
+            public void onSuccess(Object response) {
+                String str = response.toString().substring(0,1);
+                if(!str.equals("[")){
+                    return;
+                }
+                Gson gson = new Gson();
+                List<WallpaperEntity> wallpaperEntities = new ArrayList<WallpaperEntity>();
+                wallpaperEntities = gson.fromJson(response.toString(),new TypeToken<List<WallpaperEntity>>(){}.getType());
+                if(wallpaperEntities.size() > 0){
+                    for (int i = 0;i<wallpaperEntities.size();i++){
+                        mWallpaperEntitys.add(wallpaperEntities.get(i));
+                    }
+                }
+                mWallpaperGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        ThemeUtil.toast(HomeMainActivity.this,"positon = "+position,Contacts.TOAST_SHORT_DURATION);
+                    }
+                });
+                mWallpapaerAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     //pull recom theme from net work
@@ -119,19 +152,57 @@ public class HomeMainActivity extends AppCompatActivity {
         // TODO: 11/12/15  android 6.0后，不能使用httpclient，所以不能使用xutils。
         //此处使用okhttp
         //for test to get
-        OkHttpClient client = new OkHttpClient();
-        final Request request = new Request.Builder().url(Contacts.MPATH).build();
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
+//        OkHttpClient client = new OkHttpClient();
+//        final Request request = new Request.Builder().url(Contacts.MPATH).build();
+//        Call call = client.newCall(request);
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Request request, IOException e) {
+//                // TODO: 11/12/15
+//            }
+//
+//            @Override
+//            public void onResponse(Response response) throws IOException {
+//                String result = response.body().string();
+//
+//            }
+//        });
+
+        //for test
+        if(mClientManager == null){
+            mClientManager = OkHttpClientManager.getInstance();
+        }
+        mClientManager.excute(new Request.Builder().url(Contacts.MPATH).build(), new OkHttpCallback() {
             @Override
-            public void onFailure(Request request, IOException e) {
-                // TODO: 11/12/15
+            public void onError(Request request, Exception e) {
+                // TODO: 11/14/15 load location resource
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
-                String result = response.body().string();
-
+            public void onSuccess(Object response) {
+                Log.d("bonus", "response = " + response.toString());
+                String str = response.toString().substring(0,1);
+                if(!str.equals("[")){
+                    return;
+                }
+                Gson gson = new Gson();
+                List<ThemeEntity>  themeEntities = new ArrayList<ThemeEntity>();
+                themeEntities = gson.fromJson(response.toString(),new TypeToken<List<ThemeEntity>>(){}.getType());
+                Log.d("bonus","size = "+themeEntities.size());
+                if(themeEntities.size() > 0){
+                    mThemeEntitys.clear();
+                    for (int i = 0;i<themeEntities.size();i++){
+                        mThemeEntitys.add(themeEntities.get(i));
+                    }
+                }
+                mThemeGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        // TODO: 11/14/15
+                        ThemeUtil.toast(HomeMainActivity.this,"positon = "+position,Contacts.TOAST_SHORT_DURATION);
+                    }
+                });
+                mThemeAdapter.notifyDataSetChanged();
             }
         });
 
@@ -165,37 +236,6 @@ public class HomeMainActivity extends AppCompatActivity {
 
         }
     }
-
-
-    private static class ViewHolder{
-        ImageView imageView;
-        TextView textView;
-    }
-
-
-    class WallpaperAdapter extends BaseAdapter{
-
-        @Override
-        public int getCount() {
-            return 0;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
-        }
-    }
-
 
     @Override
     protected void onDestroy() {

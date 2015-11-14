@@ -7,6 +7,7 @@ import android.os.Looper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -43,7 +44,7 @@ public class OkHttpClientManager {
         }
     }
 
-    private static OkHttpClientManager getInstance(){
+    public static OkHttpClientManager getInstance(){
         if(mInstance == null){
             synchronized (OkHttpClientManager.class){
                 if(mInstance == null){
@@ -93,7 +94,65 @@ public class OkHttpClientManager {
         return mClient;
     }
 
+    public void excute(final Request request, OkHttpCallback callback){
+        if(callback == null){
+            callback = OkHttpCallback.DEFAULT_CALLBACK;
+        }
+        final OkHttpCallback restCallback = callback;
+        restCallback.onBefore(request);
+        mClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                sendFailCallback(request, e, restCallback);
+            }
 
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if(response.code() >= 400 && response.code() <= 599){
+                    sendFailCallback(request,new IOException(response.body().string()),restCallback);
+                }
+                final String result = response.body().string();
+//                if(restCallback.mType == String.class){
+//                    sendSucessCallback(result,restCallback);
+//                }else{
+//                    Object o = mGson.fromJson(result, restCallback.mType);
+//                    sendSucessCallback(o,restCallback);
+//                }
+                sendSucessCallback(result,restCallback);
+            }
+        });
+    }
+
+    /**
+     * @param request
+     * @param e
+     * @param restCallback
+     */
+    private void sendFailCallback(final Request request, final IOException e, final OkHttpCallback restCallback) {
+        if(restCallback == null){
+            return ;
+        }
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                restCallback.onError(request,e);
+                restCallback.onAfter();
+            }
+        });
+    }
+
+    private void sendSucessCallback(final Object object,final OkHttpCallback callback){
+        if(callback == null){
+            return ;
+        }
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                callback.onSuccess(object);
+                callback.onAfter();
+            }
+        });
+    }
 
 
 }

@@ -11,14 +11,16 @@ public abstract class OkHttpCallback<T> {
 //    public Type mType;
 //
 //    public OkHttpCallback() {
-//
+//        mType = getSuperclassTypeParameter(getClass());
 //    }
 //
 //    static Type getSuperclassTypeParameter(Class<?> subClass){
-//        Type class = subClass.getGenericSuperclass();
-//        if(class instanceof Class){
-//
+//        Type superClass = subClass.getGenericSuperclass();
+//        if(superClass instanceof Class){
+//            new RuntimeException("miss class type parameter");
 //        }
+//        ParameterizedType parameterized = (ParameterizedType) superClass;
+//        return $Gson$Types.canonicalize(parameterized.getActualTypeArguments()[0]);
 //    }
 
     public void onBefore(Request request){

@@ -90,11 +90,12 @@
                 android:layout_marginLeft="2dp"
                 android:text="@string/wallpaper_recommend"/>
 
-            <GridView
+            <themerom.bonus.com.themerom.view.CustomGridView
                 android:id="@+id/id_grid_wallpaper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
+                android:gravity="fill"
                 android:horizontalSpacing="1dp"
                 android:numColumns="auto_fit"/>
 
@@ -104,13 +105,15 @@
                 android:layout_marginLeft="2dp"
                 android:text="@string/theme_recommend"/>
 
-            <GridView
+            <themerom.bonus.com.themerom.view.CustomGridView
                 android:id="@+id/id_grid_theme"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="1dp"
+                android:gravity="fill"
                 android:horizontalSpacing="1dp"
-                android:numColumns="auto_fit"/>
+                android:numColumns="3"
+                android:stretchMode="columnWidth"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
