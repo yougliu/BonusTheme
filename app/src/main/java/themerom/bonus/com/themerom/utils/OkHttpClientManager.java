@@ -1,17 +1,22 @@
 package themerom.bonus.com.themerom.utils;
 
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+
+import themerom.bonus.com.themerom.callback.OkHttpCallback;
 
 /**
  * Created by helios on 11/13/15.
@@ -28,7 +33,14 @@ public class OkHttpClientManager {
         mClient = new OkHttpClient();
         mClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
         mHandler = new Handler(Looper.getMainLooper());
-        mGson = new Gson();
+        final int sdk = Build.VERSION.SDK_INT;
+        if(sdk >= 23){
+            GsonBuilder builder = new GsonBuilder()
+                    .excludeFieldsWithModifiers(Modifier.FINAL,Modifier.TRANSIENT,Modifier.STATIC);
+            mGson = builder.create();
+        }else{
+            mGson = new Gson();
+        }
     }
 
     private static OkHttpClientManager getInstance(){
@@ -62,6 +74,26 @@ public class OkHttpClientManager {
         Response response = getAsyn(url);
         return response.body().string();
     }
+
+    /**
+     * @param url
+     * @param callback
+     * @return
+     */
+    private void getAsyn(String url,final OkHttpCallback callback){
+        final Request request = new Request.Builder().url(url).build();
+
+    }
+
+    public Handler getmHandler(){
+        return mHandler;
+    }
+
+    public OkHttpClient getmClient(){
+        return mClient;
+    }
+
+
 
 
 }
