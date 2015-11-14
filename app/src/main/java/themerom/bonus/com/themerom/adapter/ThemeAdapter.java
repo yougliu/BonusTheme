@@ -2,6 +2,7 @@ package themerom.bonus.com.themerom.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,14 +27,12 @@ public class ThemeAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private Context mContext;
     private List<ThemeEntity> mThemeEntitys;
-    private boolean mIsHomePage ;
     private DisplayImageOptions mOptions;
 
-    public ThemeAdapter(Context context,List<ThemeEntity> themeEntities, DisplayImageOptions options,boolean isHomePage) {
+    public ThemeAdapter(Context context,List<ThemeEntity> themeEntities, DisplayImageOptions options) {
         mInflater = LayoutInflater.from(context);
         this.mThemeEntitys = themeEntities;
         this.mContext = context;
-        this.mIsHomePage = isHomePage;
         this.mOptions = options;
     }
 
@@ -53,25 +52,27 @@ public class ThemeAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, android.view.View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+    public View getView(final int position, android.view.View convertView, ViewGroup parent) {
+        final ViewHolder viewHolder;
         if(convertView == null){
             convertView = mInflater.inflate(R.layout.theme_item_layout,parent,false);
             viewHolder = new ViewHolder();
             viewHolder.iconImageView = (ImageView) convertView.findViewById(R.id.id_theme_icon);
-            if(!mIsHomePage){
-                viewHolder.selectImageView = (ImageView) convertView.findViewById(R.id.id_theme_select);
-                viewHolder.themeTitle = (TextView) convertView.findViewById(R.id.id_theme_title);
-            }
+            viewHolder.selectImageView = (ImageView) convertView.findViewById(R.id.id_theme_select);
+            viewHolder.themeTitle = (TextView) convertView.findViewById(R.id.id_theme_title);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
         ImageLoader.getInstance().displayImage(mThemeEntitys.get(position).getPreviewList().get(0).getPath()
-        ,viewHolder.iconImageView,mOptions,new SimpleImageLoadingListener(){
+                , viewHolder.iconImageView, mOptions, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                // TODO: 11/10/15  
+                // TODO: 11/10/15
+                Log.d("bonus","-----------------" + mThemeEntitys.get(position).getThemename());
+                if (position <= mThemeEntitys.size() - 1) {
+                    viewHolder.themeTitle.setText(mThemeEntitys.get(position).getThemename());
+                }
             }
         });
         return convertView;

@@ -74,7 +74,7 @@ public class HomeMainActivity extends AppCompatActivity {
         mClientManager = OkHttpClientManager.getInstance();
         setNoNetWork();
 
-        mThemeAdapter = new ThemeAdapter(HomeMainActivity.this,mThemeEntitys,options,true);
+        mThemeAdapter = new ThemeAdapter(HomeMainActivity.this,mThemeEntitys,options);
         mThemeGrid.setAdapter(mThemeAdapter);
 
         mWallpapaerAdapter = new WallpaperAdapter(this,mWallpaperEntitys,options);
@@ -115,7 +115,6 @@ public class HomeMainActivity extends AppCompatActivity {
         if(mClientManager == null){
             mClientManager = OkHttpClientManager.getInstance();
         }
-        Log.d("bonus","------------wallpath = "+Contacts.HomeWallPath);
         mClientManager.excute(new Request.Builder().url(Contacts.HomeWallPath).build(), new OkHttpCallback() {
             @Override
             public void onError(Request request, Exception e) {

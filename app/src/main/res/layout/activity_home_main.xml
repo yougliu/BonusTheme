@@ -33,7 +33,7 @@
                 <themerom.bonus.com.themerom.view.GalleryViewPager
                     android:id="@+id/id_galleryViewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="150dp"
                     android:background="#ffffff"
                     android:focusable="true"
                     android:focusableInTouchMode="true"/>
@@ -42,7 +42,7 @@
                     android:id="@+id/id_oval"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
-                    android:layout_marginTop="185dp"
+                    android:layout_marginTop="135dp"
                     android:background="#00ffffff"
                     android:orientation="horizontal"
                     android:gravity="center"/>
