@@ -131,6 +131,7 @@ public class HomeMainActivity extends AppCompatActivity {
                 List<WallpaperEntity> wallpaperEntities = new ArrayList<WallpaperEntity>();
                 wallpaperEntities = gson.fromJson(response.toString(),new TypeToken<List<WallpaperEntity>>(){}.getType());
                 if(wallpaperEntities.size() > 0){
+                    mWallpaperEntitys.clear();
                     for (int i = 0;i<wallpaperEntities.size();i++){
                         mWallpaperEntitys.add(wallpaperEntities.get(i));
                     }
@@ -197,14 +198,23 @@ public class HomeMainActivity extends AppCompatActivity {
                 mThemeGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // TODO: 11/14/15
-                        ThemeUtil.toast(HomeMainActivity.this,"positon = "+position,Contacts.TOAST_SHORT_DURATION);
+                        // start load theme
+                        StartLoadTheme(position);
                     }
                 });
                 mThemeAdapter.notifyDataSetChanged();
             }
         });
 
+    }
+
+    /**
+     * @param position
+     */
+    private void StartLoadTheme(int position) {
+        Intent intent = new Intent(this,DownloadTheme.class);
+        intent.putExtra(Contacts.DOWNLOAD_THEME_ENTITY,mThemeEntitys.get(position));
+        startActivity(intent);
     }
 
     private void initImageOptions() {

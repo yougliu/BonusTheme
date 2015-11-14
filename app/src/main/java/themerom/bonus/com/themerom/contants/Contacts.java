@@ -30,6 +30,8 @@ public class Contacts {
     public  static String Wallpath = "/picture_json.php?&type=wallpaper";
     public  static String ChoicePath ="/picture_json.php?type=wallpaper&desc=desc";
 
+    public static final String DOWNLOAD_THEME_ENTITY = "download_theme_entity";
+
 
 
     public List<WallpaperEntity> getWallpaperPath() {

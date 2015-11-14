@@ -2,17 +2,18 @@ package themerom.bonus.com.themerom.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.List;
 
@@ -60,19 +61,32 @@ public class ThemeAdapter extends BaseAdapter {
             viewHolder.iconImageView = (ImageView) convertView.findViewById(R.id.id_theme_icon);
             viewHolder.selectImageView = (ImageView) convertView.findViewById(R.id.id_theme_select);
             viewHolder.themeTitle = (TextView) convertView.findViewById(R.id.id_theme_title);
+            viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_theme_progressbar);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
         ImageLoader.getInstance().displayImage(mThemeEntitys.get(position).getPreviewList().get(0).getPath()
-                , viewHolder.iconImageView, mOptions, new SimpleImageLoadingListener() {
+                , viewHolder.iconImageView, mOptions, new ImageLoadingListener() {
             @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                // TODO: 11/10/15
-                Log.d("bonus","-----------------" + mThemeEntitys.get(position).getThemename());
-                if (position <= mThemeEntitys.size() - 1) {
-                    viewHolder.themeTitle.setText(mThemeEntitys.get(position).getThemename());
-                }
+            public void onLoadingStarted(String s, View view) {
+                viewHolder.progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+                viewHolder.progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                viewHolder.progressBar.setVisibility(View.GONE);
+                viewHolder.themeTitle.setText(mThemeEntitys.get(position).getThemename());
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+                viewHolder.progressBar.setVisibility(View.GONE);
             }
         });
         return convertView;
@@ -83,5 +97,6 @@ public class ThemeAdapter extends BaseAdapter {
         ImageView iconImageView;
         ImageView selectImageView;
         TextView themeTitle;
+        ProgressBar progressBar;
     }
 }

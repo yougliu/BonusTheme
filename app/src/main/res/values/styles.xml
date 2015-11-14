@@ -6,6 +6,7 @@
     </style>
 
     <style name="RomTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        
+        <item name="android:colorBackgroundCacheHint">#00000000</item>
+        <item name="android:textColor">#ffffffff</item>
     </style>
 </resources>
