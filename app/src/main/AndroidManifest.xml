@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
 
     <application
         android:name="themerom.bonus.com.themerom.application.ThemeApplication"
@@ -26,6 +28,11 @@
 
         <activity android:name=".activity.DownloadTheme"
             android:screenOrientation="portrait"/>
+
+        <!-- umeng-->
+        <meta-data android:value="5649bd67e0f55a2e1400099d" android:name="UMENG_APPKEY"></meta-data>
+        <!-- note for update-->
+        <!--<meta-data android:value="Channel ID" android:name="UMENG_CHANNEL"/>-->
     </application>
 
 </manifest>

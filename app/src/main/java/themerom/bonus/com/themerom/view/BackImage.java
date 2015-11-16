@@ -10,7 +10,7 @@ import android.view.View;
 import themerom.bonus.com.themerom.R;
 
 /**
- * Created by Bonus on 2015/11/15 0015.
+ * Created by Bonus on 2015/11/15 0015.umeng key 5649bd67e0f55a2e1400099d
  */
 public class BackImage extends View implements View.OnClickListener{
     private Paint mPaint;
@@ -44,7 +44,6 @@ public class BackImage extends View implements View.OnClickListener{
         mHeight = MeasureSpec.getSize(heightMeasureSpec);
         widthMargin = mWidth*0.3;
         heightMargin = mHeight*0.3;
-        Log.d("bonus","spec = "+mWidth+", "+mHeight);
         setMeasuredDimension(mWidth,mHeight);
     }
 
@@ -67,7 +66,6 @@ public class BackImage extends View implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        Log.d("bonus","-------------onClick");
         if(v != null){
             mListener.onBackClick();
         }else{

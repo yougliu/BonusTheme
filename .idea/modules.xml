@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BonusTheme.iml" filepath="$PROJECT_DIR$/BonusTheme.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ThemeRom.iml" filepath="$PROJECT_DIR$/ThemeRom.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
