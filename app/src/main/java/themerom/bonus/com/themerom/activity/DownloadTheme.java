@@ -3,11 +3,12 @@ package themerom.bonus.com.themerom.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import de.greenrobot.event.EventBus;
 import themerom.bonus.com.themerom.R;
+import themerom.bonus.com.themerom.entity.MsgEvent;
 import themerom.bonus.com.themerom.view.BackImage;
 
 /**
@@ -35,7 +36,7 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
 
     @Override
     public void onBackClick() {
-        Log.d("bonus","------------------ onbackClick");
+        EventBus.getDefault().post(new MsgEvent<String>("EventBus test"));
         finish();
     }
 }

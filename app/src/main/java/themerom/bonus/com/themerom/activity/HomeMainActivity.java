@@ -22,11 +22,13 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.adapter.ThemeAdapter;
 import themerom.bonus.com.themerom.adapter.WallpaperAdapter;
 import themerom.bonus.com.themerom.callback.OkHttpCallback;
 import themerom.bonus.com.themerom.contants.Contacts;
+import themerom.bonus.com.themerom.entity.MsgEvent;
 import themerom.bonus.com.themerom.entity.Preview;
 import themerom.bonus.com.themerom.entity.ThemeEntity;
 import themerom.bonus.com.themerom.entity.WallpaperEntity;
@@ -60,6 +62,8 @@ public class HomeMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_main);
         //for umeng
         MobclickAgent.setSessionContinueMillis(3000);
+        //for eventBus
+        EventBus.getDefault().register(this);
         initImageOptions();
         mGalleryViewPager = (GalleryViewPager) findViewById(R.id.id_galleryViewPager);
         mOvalLayout = (LinearLayout) findViewById(R.id.id_oval);
@@ -250,9 +254,16 @@ public class HomeMainActivity extends AppCompatActivity {
         }
     }
 
+    public void onEventMainThread(MsgEvent msg){
+        Log.d("bonus","onEventMainThread");
+        ThemeUtil.toast(this,"onEventMainThread", Contacts.TOAST_SHORT_DURATION);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //for eventbus
+        EventBus.getDefault().unregister(this);
         if(mReceiver != null){
             unregisterReceiver(mReceiver);
         }
@@ -273,4 +284,10 @@ public class HomeMainActivity extends AppCompatActivity {
         MobclickAgent.onPageEnd(mPageName);
         MobclickAgent.onPause(this);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
 }

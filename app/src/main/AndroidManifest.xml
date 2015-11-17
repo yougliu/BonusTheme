@@ -32,6 +32,7 @@
         <!-- umeng-->
         <meta-data android:value="5649bd67e0f55a2e1400099d" android:name="UMENG_APPKEY"></meta-data>
         <!-- note for update-->
+        <!-- the order is ./gradlew assembleRelease note:need java_home-->
         <meta-data android:value="${UMENG_CHANNEL_VALUE}" android:name="UMENG_CHANNEL"/>
     </application>
 
