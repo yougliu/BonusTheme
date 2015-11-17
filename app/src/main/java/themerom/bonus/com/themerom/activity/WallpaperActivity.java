@@ -18,6 +18,7 @@ import android.widget.ViewSwitcher;
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.contants.Contacts;
 import themerom.bonus.com.themerom.utils.ThemeUtil;
+import themerom.bonus.com.themerom.view.GalleryImageView;
 
 /**
  * Created by bonus on 11/17/15.
@@ -53,8 +54,7 @@ public class WallpaperActivity extends Activity{
         switcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 11/17/15 for wallpaper
-                ThemeUtil.toast(WallpaperActivity.this,"switch onclick ", Contacts.TOAST_SHORT_DURATION);
+                // TODO: 11/17/15
             }
         });
 
@@ -117,7 +117,7 @@ public class WallpaperActivity extends Activity{
             if(convertView == null){
                 convertView = LayoutInflater.from(WallpaperActivity.this).inflate(R.layout.wallpaper_gallery_item_layout,parent,false);
             }
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.id_gallery_image);
+            GalleryImageView imageView = (GalleryImageView) convertView.findViewById(R.id.id_gallery_image);
             imageView.setImageResource(thumbnailIds[position]);
             return convertView;
         }
