@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00ffffff">
+
+    <TextView
+        android:id="@+id/id_wallpaper_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_actionbar"
+        android:background="@color/title_bg_color"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:text="Wallpaper"
+        android:layout_alignParentTop="true"/>
+    <ImageSwitcher
+        android:id="@+id/id_image_switcher"
+        android:layout_width="260dp"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/id_wallpaper_title"
+        >
+    </ImageSwitcher>
+    
+    <Gallery
+        android:id="@+id/id_wallpaper_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/wallpaper_gallery_height"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:unselectedAlpha="0.6"
+        android:spacing="3dp"
+        android:layout_below="@id/id_image_switcher">
+    </Gallery>
+
+</RelativeLayout>

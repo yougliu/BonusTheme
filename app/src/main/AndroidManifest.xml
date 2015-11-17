@@ -29,6 +29,9 @@
         <activity android:name=".activity.DownloadTheme"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".activity.WallpaperActivity"
+            android:screenOrientation="portrait" />
+
         <!-- umeng-->
         <meta-data android:value="5649bd67e0f55a2e1400099d" android:name="UMENG_APPKEY"></meta-data>
         <!-- note for update-->

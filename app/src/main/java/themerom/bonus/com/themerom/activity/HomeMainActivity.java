@@ -1,9 +1,6 @@
 package themerom.bonus.com.themerom.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -51,8 +48,6 @@ public class HomeMainActivity extends AppCompatActivity {
     private List<WallpaperEntity> mWallpaperEntitys = new ArrayList<>();
     private ThemeAdapter mThemeAdapter;
     private WallpaperAdapter mWallpapaerAdapter;
-    private BroadcastReceiver mReceiver;
-    private static final String ACTION_NETWORK_REQUEST = "request.network.action";
     private OkHttpClientManager mClientManager;
 
 
@@ -105,16 +100,6 @@ public class HomeMainActivity extends AppCompatActivity {
         mWallpaperEntitys.add(new WallpaperEntity(previews));
         mWallpaperEntitys.add(new WallpaperEntity(previews));
 
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                // TODO: 11/11/15 initReComTheme and initRecomWallpapers 
-            }
-        };
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_NETWORK_REQUEST);
-        registerReceiver(mReceiver,filter);
     }
 
     //pull recom wallpaper from net work
@@ -140,7 +125,7 @@ public class HomeMainActivity extends AppCompatActivity {
                 wallpaperEntities = gson.fromJson(response.toString(),new TypeToken<List<WallpaperEntity>>(){}.getType());
                 if(wallpaperEntities.size() > 0){
                     mWallpaperEntitys.clear();
-                    for (int i = 0;i<wallpaperEntities.size();i++){
+                    for (int i = 0;i<2;i++){
                         mWallpaperEntitys.add(wallpaperEntities.get(i));
                     }
                 }
@@ -196,7 +181,6 @@ public class HomeMainActivity extends AppCompatActivity {
                 Gson gson = new Gson();
                 List<ThemeEntity>  themeEntities = new ArrayList<ThemeEntity>();
                 themeEntities = gson.fromJson(response.toString(),new TypeToken<List<ThemeEntity>>(){}.getType());
-                Log.d("bonus","size = "+themeEntities.size());
                 if(themeEntities.size() > 0){
                     mThemeEntitys.clear();
                     for (int i = 0;i<themeEntities.size();i++){
@@ -246,6 +230,8 @@ public class HomeMainActivity extends AppCompatActivity {
                 break;
 
             case R.id.id_home_wallpaper:
+                Intent intent = new Intent(HomeMainActivity.this,WallpaperActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.id_home_liveWallPaper:
@@ -264,9 +250,6 @@ public class HomeMainActivity extends AppCompatActivity {
         super.onDestroy();
         //for eventbus
         EventBus.getDefault().unregister(this);
-        if(mReceiver != null){
-            unregisterReceiver(mReceiver);
-        }
     }
 
     @Override

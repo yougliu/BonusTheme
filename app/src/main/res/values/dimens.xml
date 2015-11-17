@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="download_theme_button_text">12sp</dimen>
+    <dimen name="title_actionbar">40dp</dimen>
+    <dimen name="wallpaper_gallery_height">100dp</dimen>
 </resources>

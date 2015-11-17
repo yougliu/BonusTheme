@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="thumbnail_wallpaper">
+        <item>@drawable/thumbnail_1</item>
+        <item>@drawable/thumbnail_2</item>
+        <item>@drawable/thumbnail_3</item>
+        <item>@drawable/thumbnail_4</item>
+        <item>@drawable/thumbnail_5</item>
+        <item>@drawable/thumbnail_6</item>
+        <item>@drawable/thumbnail_7</item>
+        <item>@drawable/thumbnail_8</item>
+        <item>@drawable/thumbnail_9</item>
+        <item>@drawable/thumbnail_10</item>
+    </string-array>
+
+    <string-array name="original_wallpaper">
+        <item>@drawable/original_1</item>
+        <item>@drawable/original_2</item>
+        <item>@drawable/original_3</item>
+        <item>@drawable/original_4</item>
+        <item>@drawable/original_5</item>
+        <item>@drawable/original_6</item>
+        <item>@drawable/original_7</item>
+        <item>@drawable/original_8</item>
+        <item>@drawable/original_9</item>
+        <item>@drawable/original_10</item>
+    </string-array>
+</resources>
