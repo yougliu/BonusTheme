@@ -17,6 +17,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors{
+        xiaomi{
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE:"xiaomi"]
+        }
+        _360{
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE:"_360"]
+        }
+        google{
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE:"google"]
+        }
+        wandoujia{
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE:"wandoujia"]
+        }
+        baidu{
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE:"baidu"]
+        }
+    }
+
 }
 
 dependencies {

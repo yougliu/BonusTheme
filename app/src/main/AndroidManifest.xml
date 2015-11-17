@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/RomTheme" >
         <activity
-            android:name=".activity.HomeMainActivity"
+            android:name="themerom.bonus.com.themerom.activity.HomeMainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -32,7 +32,7 @@
         <!-- umeng-->
         <meta-data android:value="5649bd67e0f55a2e1400099d" android:name="UMENG_APPKEY"></meta-data>
         <!-- note for update-->
-        <!--<meta-data android:value="Channel ID" android:name="UMENG_CHANNEL"/>-->
+        <meta-data android:value="${UMENG_CHANNEL_VALUE}" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

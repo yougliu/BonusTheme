@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.squareup.okhttp.Request;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ import themerom.bonus.com.themerom.view.GalleryViewPager;
 public class HomeMainActivity extends AppCompatActivity {
 
     private static final String TAG = HomeMainActivity.class.getSimpleName();
+    private final String mPageName = "HomeMainActivity";
     private GalleryViewPager mGalleryViewPager;
     private LinearLayout mOvalLayout;
     DisplayImageOptions options;
@@ -56,6 +58,8 @@ public class HomeMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_main);
+        //for umeng
+        MobclickAgent.setSessionContinueMillis(3000);
         initImageOptions();
         mGalleryViewPager = (GalleryViewPager) findViewById(R.id.id_galleryViewPager);
         mOvalLayout = (LinearLayout) findViewById(R.id.id_oval);
@@ -252,5 +256,21 @@ public class HomeMainActivity extends AppCompatActivity {
         if(mReceiver != null){
             unregisterReceiver(mReceiver);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //for umeng
+        MobclickAgent.onPageStart(mPageName);
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //for umeng
+        MobclickAgent.onPageEnd(mPageName);
+        MobclickAgent.onPause(this);
     }
 }
