@@ -8,6 +8,7 @@
         <attr name="textColor" format="color" />
         <attr name="max" format="integer" />
         <attr name="textIsDisplayable" format="boolean" />
+
         <attr name="roundStyle">
             <enum name="STROKE" value="0"/>
             <enum name="FILL" value="1" />
@@ -17,5 +18,11 @@
             <enum name="ROUND" value="2"/>
             <enum name="VERTICAL" value="1" />
         </attr>
+        <attr name="isRotation" format="boolean" />
+        <attr name="isGradient" format="boolean" />
+        <attr name="startColor" format="color" />
+        <attr name="middleColor" format="color" />
+        <attr name="endColor" format="color" />
+        <attr name="degree" format="integer" />
     </declare-styleable>
 </resources>
