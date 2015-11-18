@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -19,6 +18,7 @@ import java.util.List;
 
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.entity.WallpaperEntity;
+import themerom.bonus.com.themerom.view.BonusProgressBar;
 
 /**
  * Created by bonus on 11/14/15.
@@ -60,7 +60,7 @@ public class WallpaperAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.wallpaper_item_layout,parent,false);
             holder.imageView = (ImageView) convertView.findViewById(R.id.id_wallpaper_icon);
             holder.textView = (TextView) convertView.findViewById(R.id.id_wallpaper_text);
-            holder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_wallpaper_progressbar);
+            holder.progressBar = (BonusProgressBar) convertView.findViewById(R.id.id_wallpaper_progressbar);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
@@ -71,6 +71,8 @@ public class WallpaperAdapter extends BaseAdapter {
                 @Override
                 public void onLoadingStarted(String s, View view) {
                     holder.progressBar.setVisibility(View.VISIBLE);
+                    holder.progressBar.setProgress(40);
+
                 }
 
                 @Override
@@ -95,7 +97,7 @@ public class WallpaperAdapter extends BaseAdapter {
     class ViewHolder{
         ImageView imageView;
         TextView textView;
-        ProgressBar progressBar;
+        BonusProgressBar progressBar;
     }
 
 }

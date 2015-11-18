@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="bonusProgressBar">
+        <attr name="Color" format="color"/>
+        <attr name="progressColor" format="color"/>
+        <attr name="progressBarWidth" format="dimension"/>
+        <attr name="textSize" format="dimension" />
+        <attr name="textColor" format="color" />
+        <attr name="max" format="integer" />
+        <attr name="textIsDisplayable" format="boolean" />
+        <attr name="roundStyle">
+            <enum name="STROKE" value="0"/>
+            <enum name="FILL" value="1" />
+        </attr>
+        <attr name="style">
+            <enum name="HORIZONTAL" value="0"/>
+            <enum name="ROUND" value="2"/>
+            <enum name="VERTICAL" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>

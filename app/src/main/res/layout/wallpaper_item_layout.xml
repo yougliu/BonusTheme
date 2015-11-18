@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bonus="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="140dp"
     android:layout_margin="1dp">
@@ -12,10 +13,13 @@
         android:layout_centerInParent="true"
         />
 
-    <ProgressBar
+    <themerom.bonus.com.themerom.view.BonusProgressBar
         android:id="@+id/id_wallpaper_progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        bonus:textIsDisplayable="true"
+        bonus:style="ROUND"
+        bonus:roundStyle="FILL"
         android:layout_centerInParent="true"/>
     <TextView
         android:id="@+id/id_wallpaper_text"
