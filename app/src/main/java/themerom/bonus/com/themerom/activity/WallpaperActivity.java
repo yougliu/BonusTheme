@@ -3,6 +3,7 @@ package themerom.bonus.com.themerom.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +14,24 @@ import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.contants.Contacts;
 import themerom.bonus.com.themerom.utils.ThemeUtil;
+import themerom.bonus.com.themerom.view.BackImage;
 import themerom.bonus.com.themerom.view.GalleryImageView;
 
 /**
  * Created by bonus on 11/17/15.
  * Class name ${type_name}
  */
-public class WallpaperActivity extends Activity{
+public class WallpaperActivity extends Activity implements BackImage.OnBackClickListener{
     private static final String TAG = WallpaperActivity.class.getSimpleName();
+    private BackImage mBack;
+    private TextView mTitle;
+    private ImageView mSet;
     private ImageSwitcher switcher;
     private Gallery mGallery;
     private int[] thumbnailIds;
@@ -37,6 +43,7 @@ public class WallpaperActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wallpaper_detail_layout);
+        initActionBar();
         switcher = (ImageSwitcher) findViewById(R.id.id_image_switcher);
         mGallery = (Gallery) findViewById(R.id.id_wallpaper_gallery);
         switcher.setFactory(new ViewSwitcher.ViewFactory() {
@@ -82,6 +89,13 @@ public class WallpaperActivity extends Activity{
         });
     }
 
+    private void initActionBar() {
+        mBack = (BackImage) findViewById(R.id.id_back);
+        mTitle = (TextView) findViewById(R.id.id_actionbar_title);
+        mSet = (ImageView) findViewById(R.id.id_set);
+        mBack.setOnBackClickListener(this);
+    }
+
     private void loadWallpaperResource(Context context) {
         TypedArray thumbArray = context.getResources().obtainTypedArray(R.array.thumbnail_wallpaper);
         TypedArray originArray = context.getResources().obtainTypedArray(R.array.original_wallpaper);
@@ -93,6 +107,11 @@ public class WallpaperActivity extends Activity{
         }
         thumbArray.recycle();
         originArray.recycle();
+    }
+
+    @Override
+    public void onBackClick() {
+        finish();
     }
 
     class GalleryAdapter extends BaseAdapter{
@@ -120,6 +139,15 @@ public class WallpaperActivity extends Activity{
             GalleryImageView imageView = (GalleryImageView) convertView.findViewById(R.id.id_gallery_image);
             imageView.setImageResource(thumbnailIds[position]);
             return convertView;
+        }
+    }
+
+
+    class myas extends AsyncTask<Integer,String,Boolean>{
+
+        @Override
+        protected Boolean doInBackground(Integer... params) {
+            return null;
         }
     }
 }

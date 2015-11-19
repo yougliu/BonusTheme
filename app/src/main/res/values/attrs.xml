@@ -25,4 +25,21 @@
         <attr name="endColor" format="color" />
         <attr name="degree" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="bonusPopupWindowView">
+        <attr name="background" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="textGravity">
+            <enum name="CENTER" value="0"/>
+            <enum name="LEFT" value="1" />
+            <enum name="RIGHT" value="2" />
+        </attr>
+        <attr name="imageGravity">
+            <enum name="CENTER" value="0"/>
+            <enum name="LEFT" value="1" />
+            <enum name="RIGHT" value="2" />
+        </attr>
+
+
+    </declare-styleable>
 </resources>
