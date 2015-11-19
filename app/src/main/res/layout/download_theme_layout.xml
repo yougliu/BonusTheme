@@ -5,28 +5,7 @@
     android:background="#ffffff"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/title_bg_color"
-        android:textColor="@color/title_text_color"
-        >
-        <themerom.bonus.com.themerom.view.BackImage
-            android:id="@+id/id_back"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            />
-
-        <TextView
-            android:id="@+id/id_theme_title"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:textSize="16sp"/>
-    </RelativeLayout>
+    <include layout="@layout/bonus_actionbar" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/id_viewpager"

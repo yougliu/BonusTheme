@@ -17,9 +17,9 @@ public class Contacts {
     public static final int TOAST_LONG_DURATION = 1;
     public static final int TOAST_SHORT_DURATION = 0;
 
-    private List<Preview> thumbPath = new ArrayList<>();
-    private List<Preview> originPath = new ArrayList<>();
-    private List<WallpaperEntity> wallpaperPath = new ArrayList<>();
+    private static List<Preview> thumbPath = new ArrayList<>();
+    private static List<Preview> originPath = new ArrayList<>();
+    private static List<WallpaperEntity> wallpaperPath = new ArrayList<>();
 
     public static String DownloadNumber="/tools/picture_good_data.php?pic_type=topicpaper&isdownload=1";
     public static String WallpaperDownloadNumber="/online_wallpaper/tools/picture_good_data.php?pic_type=wallpaper&isdownload=1";
@@ -34,28 +34,28 @@ public class Contacts {
 
 
 
-    public List<WallpaperEntity> getWallpaperPath() {
+    public static List<WallpaperEntity> getWallpaperPath() {
         return wallpaperPath;
     }
 
-    public void setWallpaperPath(List<WallpaperEntity> wallpaperPath) {
-        this.wallpaperPath = wallpaperPath;
+    public static void setWallpaperPath(List<WallpaperEntity> wallpaperPath) {
+        Contacts.wallpaperPath = wallpaperPath;
     }
 
-    public List<Preview> getThumbPath() {
+    public static List<Preview> getThumbPath() {
         return thumbPath;
     }
 
-    public void setThumbPath(List<Preview> thumbPath) {
-        this.thumbPath = thumbPath;
+    public static void setThumbPath(List<Preview> thumbPath) {
+        Contacts.thumbPath = thumbPath;
     }
 
-    public List<Preview> getOriginPath() {
+    public static List<Preview> getOriginPath() {
         return originPath;
     }
 
-    public void setOriginPath(List<Preview> originPath) {
-        this.originPath = originPath;
+    public static void setOriginPath(List<Preview> originPath) {
+        Contacts.originPath = originPath;
     }
 
     public static void getPixel(Context context){

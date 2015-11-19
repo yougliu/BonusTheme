@@ -71,7 +71,6 @@ public class WallpaperAdapter extends BaseAdapter {
                 @Override
                 public void onLoadingStarted(String s, View view) {
                     holder.progressBar.setVisibility(View.VISIBLE);
-                    holder.progressBar.setProgress(40);
 
                 }
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_actionbar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/title_actionbar"
+    android:orientation="horizontal"
+    android:background="@color/title_bg_color"
+    android:gravity="center_vertical"
+    android:layout_alignParentTop="true">
+
+    <themerom.bonus.com.themerom.view.BackImage
+        android:id="@+id/id_back"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:layout_gravity="left"/>
+
+    <TextView
+        android:id="@+id/id_wallpaper_title"
+        android:layout_width="0dp"
+        android:layout_weight="7"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textAllCaps="false"
+        android:text="Wallpaper"
+        />
+
+    <ImageView
+        android:id="@+id/id_set"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/qs_set_icon"
+        android:layout_gravity="right"
+        android:clickable="true"/>
+</LinearLayout>

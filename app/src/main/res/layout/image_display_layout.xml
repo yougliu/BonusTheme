@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#dadada">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/id_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:id="@+id/id_choice_left"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true">
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="#90FFC0CB"
+            android:gravity="right|center_vertical"
+            android:text="Save to local"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/set_lock"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:background="#90FFEC8B"
+            android:padding="10dp"
+            android:gravity="right|center_vertical"
+            android:text="Set the lock screen"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/set"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:background="#90C1FFC1"
+            android:gravity="right|center_vertical"
+            android:text="Set as wallpaper"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/zambia"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:background="#90EE82EE"
+            android:gravity="right|center_vertical"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:lineSpacingExtra="2dp"
+            android:textColor="#FFFFFF" />
+        <Button
+            android:id="@+id/close"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:background="#90B2DFEE"
+            android:gravity="right|center_vertical"
+            android:padding="10dp"
+            android:text="Close"
+            android:textAllCaps="false"
+            android:lineSpacingExtra="2dp"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_choice_right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        android:orientation="vertical"
+        android:visibility="gone" >
+        <Button
+            android:id="@id/save"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="#90FFC0CB"
+            android:gravity="left|center_vertical"
+            android:textAllCaps="false"
+            android:text="Save to local"
+            android:padding="10dp"
+            android:textColor="#FFFFFF" />
+
+
+        <Button
+            android:id="@id/set_lock"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:background="#90FFEC8B"
+            android:gravity="left|center_vertical"
+            android:text="Set the lock screen"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@id/set"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:background="#90C1FFC1"
+            android:gravity="left|center_vertical"
+            android:text="Set wallpaper"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@id/zambia"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:background="#90EE82EE"
+            android:gravity="left|center_vertical"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:lineSpacingExtra="2dp"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@id/close"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:background="#90B2DFEE"
+            android:gravity="left|center_vertical"
+            android:text="Close"
+            android:textAllCaps="false"
+            android:padding="10dp"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+        android:background="#80A8A8A8"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:id="@+id/id_drag"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/iv_pager_drag"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/drag" />
+    </LinearLayout>
+
+
+
+</RelativeLayout>

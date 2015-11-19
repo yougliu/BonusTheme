@@ -132,12 +132,35 @@ public class HomeMainActivity extends AppCompatActivity {
                 mWallpaperGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        ThemeUtil.toast(HomeMainActivity.this,"positon = "+position,Contacts.TOAST_SHORT_DURATION);
+                        if(mWallpaperEntitys != null){
+                            setWallpaperPath(mWallpaperEntitys);
+                            //startactivity
+                            StartWallpaperActivity(position);
+                        }
                     }
                 });
                 mWallpapaerAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    /**
+     * to wallpaper activity
+     * @param position
+     */
+    private void StartWallpaperActivity(int position) {
+        // TODO: 11/19/15
+    }
+
+    public void setWallpaperPath(List<WallpaperEntity> entitys){
+        Contacts.getOriginPath().clear();
+        Contacts.getThumbPath().clear();
+        Contacts.getWallpaperPath().clear();
+        for (int i = 0;i<entitys.size();i++){
+            Contacts.getOriginPath().add(entitys.get(i).getPreviewList().get(0));
+            Contacts.getThumbPath().add(entitys.get(i).getImageList().get(0));
+            Contacts.getWallpaperPath().add(entitys.get(i));
+        }
     }
 
     //pull recom theme from net work
@@ -197,7 +220,6 @@ public class HomeMainActivity extends AppCompatActivity {
                 mThemeAdapter.notifyDataSetChanged();
             }
         });
-
     }
 
     /**
@@ -232,6 +254,7 @@ public class HomeMainActivity extends AppCompatActivity {
             case R.id.id_home_wallpaper:
                 Intent intent = new Intent(HomeMainActivity.this,WallpaperActivity.class);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 break;
 
             case R.id.id_home_liveWallPaper:
