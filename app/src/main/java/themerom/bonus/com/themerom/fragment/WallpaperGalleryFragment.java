@@ -1,10 +1,10 @@
 package themerom.bonus.com.themerom.fragment;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +25,7 @@ import themerom.bonus.com.themerom.view.GalleryImageView;
  * Created by bonus on 11/26/15.
  * Class name ${type_name}
  */
-public class WallpaperGalleryFragment extends Fragment{
+public class WallpaperGalleryFragment extends Fragment {
 
     private static final String TAG = WallpaperGalleryFragment.class.getSimpleName();
     private ImageSwitcher switcher;
@@ -38,13 +38,13 @@ public class WallpaperGalleryFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wallpaper_gallery_switch_layout,null);
-        mContext = getContext();
+        mContext = getActivity();
         switcher = (ImageSwitcher)view.findViewById(R.id.id_image_switcher);
         mGallery = (Gallery) view.findViewById(R.id.id_wallpaper_gallery);
         switcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
-                ImageView imageView = new ImageView(getContext());
+                ImageView imageView = new ImageView(mContext);
                 imageView.setBackgroundColor(0xffffff);
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 imageView.setLayoutParams(new ImageSwitcher.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));

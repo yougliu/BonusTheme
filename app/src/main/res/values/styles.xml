@@ -9,4 +9,9 @@
         <item name="android:colorBackgroundCacheHint">#00000000</item>
         <item name="android:textColor">#ffffffff</item>
     </style>
+
+    <style name="popup_anim_style">
+        <item name="android:windowExitAnimation">@anim/popup_anim_out</item>
+        <item name="android:windowEnterAnimation">@anim/popup_anim_in</item>
+    </style>
 </resources>

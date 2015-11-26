@@ -96,7 +96,7 @@ public class WallpaperGridAdapter extends BaseAdapter{
         imageView.setImageResource(R.drawable.empty_photo);
         //加载网络图片图片
         loadBitmapImage(imageView,mImageThumbs[position]);
-        return null;
+        return convertView;
     }
 
     /**

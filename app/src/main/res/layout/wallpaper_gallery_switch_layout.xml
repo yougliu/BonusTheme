@@ -7,7 +7,7 @@
     <ImageSwitcher
         android:id="@+id/id_image_switcher"
         android:layout_width="260dp"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
         android:layout_centerInParent="true"
         android:layout_below="@id/id_actionbar"
         >

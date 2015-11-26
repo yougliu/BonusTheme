@@ -22,6 +22,10 @@ public class Contacts {
     public static final int GALLERY_STYLE = 0;
     public static final int GRIDVIEW_STYLE = 1;
     public static final int WATERFALL_STYLE = 2;
+    public static final String GALLERY_TAG = "gallery_tag";
+    public static final String GRIDVIEW_TAG = "gridview_tag";
+    public static final String WATERFALL_TAG = "waterfall_tag";
+
 
     private static List<Preview> thumbPath = new ArrayList<>();
     private static List<Preview> originPath = new ArrayList<>();

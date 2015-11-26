@@ -1,8 +1,9 @@
 package themerom.bonus.com.themerom.fragment;
 
+import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,14 @@ import themerom.bonus.com.themerom.contants.Contacts;
  * Created by bonus on 11/26/15.
  * Class name ${type_name}
  */
-public class WallpaperGridViewFragment extends Fragment{
+public class WallpaperGridViewFragment extends Fragment {
 
     private static final String TAG = WallpaperGridViewFragment.class.getSimpleName();
     private WallpaperGridAdapter mAdapter;
     private int mImageThumbSize;
     private int mImageThumbSpacing;
     private GridView mGridView;
+    private Context mContext;
 
     @Nullable
     @Override
@@ -32,7 +34,8 @@ public class WallpaperGridViewFragment extends Fragment{
         mGridView = (GridView) view.findViewById(R.id.id_wallpaper_gridview);
         mImageThumbSize = getResources().getDimensionPixelSize(R.dimen.gridview_column_width);
         mImageThumbSpacing = getResources().getDimensionPixelSize(R.dimen.gridview_spacing);
-        mAdapter = new WallpaperGridAdapter(mGridView,getContext(), Contacts.imageThumbUrls);
+        mContext = getActivity();
+        mAdapter = new WallpaperGridAdapter(mGridView,mContext, Contacts.imageThumbUrls);
         mGridView.setAdapter(mAdapter);
         mGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
