@@ -1,6 +1,8 @@
 package themerom.bonus.com.themerom.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +51,7 @@ public class HomeMainActivity extends AppCompatActivity {
     private ThemeAdapter mThemeAdapter;
     private WallpaperAdapter mWallpapaerAdapter;
     private OkHttpClientManager mClientManager;
+    private SharedPreferences mPreferences;
 
 
     @Override
@@ -82,6 +85,8 @@ public class HomeMainActivity extends AppCompatActivity {
 
         mWallpapaerAdapter = new WallpaperAdapter(this,mWallpaperEntitys,options);
         mWallpaperGrid.setAdapter(mWallpapaerAdapter);
+
+        mPreferences = this.getSharedPreferences(Contacts.SHARE_PREFERENCE, Context.MODE_PRIVATE);
 
     }
 
@@ -252,7 +257,9 @@ public class HomeMainActivity extends AppCompatActivity {
                 break;
 
             case R.id.id_home_wallpaper:
+                int style = mPreferences.getInt(Contacts.WALLPAPER_STYLE,Contacts.GALLERY_STYLE);
                 Intent intent = new Intent(HomeMainActivity.this,WallpaperActivity.class);
+                intent.putExtra(Contacts.WALLPAPER_STYLE,style);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 break;

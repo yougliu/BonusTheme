@@ -5,4 +5,6 @@
     <dimen name="download_theme_button_text">12sp</dimen>
     <dimen name="title_actionbar">40dp</dimen>
     <dimen name="wallpaper_gallery_height">130dp</dimen>
+    <dimen name="gridview_column_width">90dp</dimen>
+    <dimen name="gridview_spacing">5dp</dimen>
 </resources>
