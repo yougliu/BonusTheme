@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00ffffff">
+    android:background="#00ffffff"
+    android:orientation="vertical">
 
-    <include layout="@layout/bonus_actionbar" />
-    <ImageSwitcher
-        android:id="@+id/id_image_switcher"
-        android:layout_width="260dp"
-        android:layout_height="400dp"
-        android:layout_centerInParent="true"
-        android:layout_below="@id/id_actionbar"
-        >
-    </ImageSwitcher>
-    
-    <Gallery
-        android:id="@+id/id_wallpaper_gallery"
+    <include
         android:layout_width="match_parent"
-        android:layout_height="@dimen/wallpaper_gallery_height"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:unselectedAlpha="0.6"
-        android:spacing="3dp"
-        android:layout_below="@id/id_image_switcher">
-    </Gallery>
+        android:layout_height="wrap_content"
+        layout="@layout/bonus_actionbar" />
 
-</RelativeLayout>
+    <FrameLayout
+        android:id="@+id/id_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp">
+    </FrameLayout>
+</LinearLayout>
