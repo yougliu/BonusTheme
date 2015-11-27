@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -27,7 +28,6 @@ import java.util.Set;
 import libcore.io.DiskLruCache;
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.utils.ThemeUtil;
-import themerom.bonus.com.themerom.view.GalleryImageView;
 
 /**
  * Created by bonus on 11/26/15.
@@ -85,9 +85,9 @@ public class WallpaperGridAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.wallpaper_gallery_item_layout,null,false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.gridview_image_item_layout,null,false);
         }
-        final GalleryImageView imageView = (GalleryImageView) convertView.findViewById(R.id.id_gallery_image);
+        final ImageView imageView = (ImageView) convertView.findViewById(R.id.id_gridview_image);
         if(imageView.getLayoutParams().height != mItemHeight){
             imageView.getLayoutParams().height = mItemHeight;
         }
@@ -123,7 +123,7 @@ public class WallpaperGridAdapter extends BaseAdapter{
      * @param imageView
      * @param mImageThumb
      */
-    public void loadBitmapImage(GalleryImageView imageView, String mImageThumb) {
+    public void loadBitmapImage(ImageView imageView, String mImageThumb) {
         Bitmap bitmap = getBitmapFromMemoryCache(mImageThumb);
         if(bitmap == null){
             //load from network
@@ -198,7 +198,7 @@ public class WallpaperGridAdapter extends BaseAdapter{
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             // 根据Tag找到相应的ImageView控件，将下载好的图片显示出来。
-            GalleryImageView imageView = (GalleryImageView) mGridView.findViewWithTag(imageUrl);
+            ImageView imageView = (ImageView) mGridView.findViewWithTag(imageUrl);
             if(imageView != null&&bitmap != null){
                 imageView.setImageBitmap(bitmap);
             }

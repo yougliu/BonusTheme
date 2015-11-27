@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class WallpaperActivity extends Activity implements BackImage.OnBackClick
         initActionBar();
         mPreferences = getSharedPreferences(Contacts.SHARE_PREFERENCE, Context.MODE_PRIVATE);
         mStyle = mPreferences.getInt(Contacts.WALLPAPER_STYLE,Contacts.GALLERY_STYLE);
+        Log.d("bonus","mStyle = "+mStyle);
         setStyle(mStyle);
     }
 
@@ -126,7 +128,9 @@ public class WallpaperActivity extends Activity implements BackImage.OnBackClick
                 if(mStyle == Contacts.GALLERY_STYLE){
                     return;
                 }
-                mPreferences.edit().putInt(Contacts.WALLPAPER_STYLE,Contacts.GALLERY_STYLE).commit();
+//                mPreferences.edit().putInt(Contacts.WALLPAPER_STYLE,Contacts.GALLERY_STYLE).commit();
+                SharedPreferences.Editor editor = mPreferences.edit();
+                editor.putInt(Contacts.WALLPAPER_STYLE,Contacts.GALLERY_STYLE).commit();
                 mStyle = Contacts.GALLERY_STYLE;
                 if(mGalleryFragment == null){
                     mGalleryFragment = new WallpaperGalleryFragment();
@@ -142,8 +146,10 @@ public class WallpaperActivity extends Activity implements BackImage.OnBackClick
                 if(mStyle == Contacts.GRIDVIEW_STYLE){
                     return;
                 }
-                mPreferences.edit().putInt(Contacts.WALLPAPER_STYLE,Contacts.GALLERY_STYLE).commit();
                 mStyle = Contacts.GRIDVIEW_STYLE;
+                mPreferences.edit().putInt(Contacts.WALLPAPER_STYLE,mStyle).commit();
+                int i = mPreferences.getInt(Contacts.WALLPAPER_STYLE,Contacts.GALLERY_STYLE);
+                Log.d("bonus","i = "+i);
                 if(mGridViewFragment == null){
                     mGridViewFragment = new WallpaperGridViewFragment();
                 }
@@ -158,8 +164,8 @@ public class WallpaperActivity extends Activity implements BackImage.OnBackClick
                 if(mStyle == Contacts.WATERFALL_STYLE){
                     return;
                 }
-                mPreferences.edit().putInt(Contacts.WALLPAPER_STYLE,Contacts.GALLERY_STYLE).commit();
                 mStyle = Contacts.WATERFALL_STYLE;
+                mPreferences.edit().putInt(Contacts.WALLPAPER_STYLE,mStyle).commit();
                 if(mWaterfallFragment == null){
                     mWaterfallFragment = new WallpaperWaterfallFragment();
                 }

@@ -11,10 +11,10 @@
         android:shape="ring"
         android:useLevel="false">
         <gradient
-            android:centerColor="#FFFFFF"
+            android:centerColor="#C1CDCD"
             android:centerY="0.50"
-            android:endColor="#FFFF00"
-            android:startColor="#000000"
+            android:endColor="#F0FFFF"
+            android:startColor="#838B8B"
             android:type="sweep"
             android:useLevel="false" />
     </shape>

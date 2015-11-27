@@ -18,7 +18,7 @@ public class Contacts {
     public static final int TOAST_SHORT_DURATION = 0;
 
     public static final String SHARE_PREFERENCE = "com.bonus.preference";
-    public static final String WALLPAPER_STYLE = "wallpaper_style";
+    public static final String WALLPAPER_STYLE = "wallpaperStyle";
     public static final int GALLERY_STYLE = 0;
     public static final int GRIDVIEW_STYLE = 1;
     public static final int WATERFALL_STYLE = 2;
