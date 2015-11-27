@@ -62,6 +62,7 @@ public class WallpaperGalleryFragment extends Fragment {
         //load gallery resource
         loadWallpaperResource(mContext);
         mGallery.setAdapter(new GalleryAdapter());
+        mGallery.setSelection(4);
         mGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

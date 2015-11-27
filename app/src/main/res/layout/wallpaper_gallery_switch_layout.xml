@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#00ffffff">
 
-    <ImageSwitcher
-        android:id="@+id/id_image_switcher"
-        android:layout_width="260dp"
-        android:layout_height="300dp"
-        android:layout_centerInParent="true"
-        android:layout_below="@id/id_actionbar"
-        >
-    </ImageSwitcher>
-    
-    <Gallery
-        android:id="@+id/id_wallpaper_gallery"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/wallpaper_gallery_height"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:unselectedAlpha="0.6"
-        android:spacing="3dp"
-        android:layout_below="@id/id_image_switcher">
-    </Gallery>
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:layout_gravity="center"
+        android:gravity="center">
 
-</RelativeLayout>
+        <ImageSwitcher
+            android:id="@+id/id_image_switcher"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="30dp"
+            >
+        </ImageSwitcher>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:gravity="center"
+        >
+
+        <Gallery
+            android:id="@+id/id_wallpaper_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/wallpaper_gallery_height"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:unselectedAlpha="0.6"
+            android:spacing="3dp"
+            >
+        </Gallery>
+    </LinearLayout>
+
+
+</LinearLayout>

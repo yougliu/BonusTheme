@@ -115,7 +115,7 @@ public class WallpaperActivity extends Activity implements BackImage.OnBackClick
                 id_gridview.setOnClickListener(this);
                 id_waterfall.setOnClickListener(this);
                 popup = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                popup.setBackgroundDrawable(new ColorDrawable(0xE0EEEE));
+                popup.setBackgroundDrawable(new ColorDrawable(0xC1CDCD));
                 popup.setFocusable(true);
                 popup.setOutsideTouchable(true);
                 popup.setAnimationStyle(R.style.popup_anim_style);
