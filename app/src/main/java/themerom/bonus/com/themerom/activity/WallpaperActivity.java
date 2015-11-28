@@ -52,7 +52,9 @@ public class WallpaperActivity extends Activity implements BackImage.OnBackClick
         mPreferences = getSharedPreferences(Contacts.SHARE_PREFERENCE, Context.MODE_PRIVATE);
         mStyle = mPreferences.getInt(Contacts.WALLPAPER_STYLE,Contacts.GALLERY_STYLE);
         Log.d("bonus","mStyle = "+mStyle);
-        setStyle(mStyle);
+        if(savedInstanceState == null){//for screen change
+            setStyle(mStyle);
+        }
     }
 
     private void setStyle(int style){
