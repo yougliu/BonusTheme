@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Created by helios on 11/9/15.
  */
-public class ThemeUtil {
+public class BonusImageUtil {
     //Toast
     public static void toast(Context context, String content, int duration){
         Toast.makeText(context, content, duration).show();

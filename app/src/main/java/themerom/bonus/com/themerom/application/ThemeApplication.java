@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -22,8 +22,9 @@ public class ThemeApplication extends Application {
     }
 
     private void initImageLoader(Context context) {
+        int maxMemory = (int) Runtime.getRuntime().maxMemory();
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
-        config.memoryCache(new WeakMemoryCache())
+        config.memoryCache(new LruMemoryCache(maxMemory/8))
                 .denyCacheImageMultipleSizesInMemory()
                 .diskCacheSize(50*1024*1024)
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator())

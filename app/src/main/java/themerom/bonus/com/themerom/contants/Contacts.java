@@ -7,7 +7,7 @@ import java.util.List;
 
 import themerom.bonus.com.themerom.entity.Preview;
 import themerom.bonus.com.themerom.entity.WallpaperEntity;
-import themerom.bonus.com.themerom.utils.ThemeUtil;
+import themerom.bonus.com.themerom.utils.BonusImageUtil;
 
 /**
  * Created by helios on 11/11/15.
@@ -70,7 +70,7 @@ public class Contacts {
 
     public static void getPixel(Context context){
         int p = 0;
-        if(ThemeUtil.isFHD(context)){
+        if(BonusImageUtil.isFHD(context)){
             p = 1;
         }
         String ptype="&ptype="+p;

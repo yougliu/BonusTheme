@@ -21,7 +21,7 @@ import themerom.bonus.com.themerom.contants.Contacts;
 import themerom.bonus.com.themerom.fragment.WallpaperGalleryFragment;
 import themerom.bonus.com.themerom.fragment.WallpaperGridViewFragment;
 import themerom.bonus.com.themerom.fragment.WallpaperWaterfallFragment;
-import themerom.bonus.com.themerom.utils.ThemeUtil;
+import themerom.bonus.com.themerom.utils.BonusImageUtil;
 import themerom.bonus.com.themerom.view.BackImage;
 
 /**
@@ -162,7 +162,7 @@ public class WallpaperActivity extends Activity implements BackImage.OnBackClick
                 if(popup.isShowing()){
                     popup.dismiss();
                 }
-                ThemeUtil.toast(this,"waterfall",Contacts.TOAST_SHORT_DURATION);
+                BonusImageUtil.toast(this, "waterfall", Contacts.TOAST_SHORT_DURATION);
                 if(mStyle == Contacts.WATERFALL_STYLE){
                     return;
                 }

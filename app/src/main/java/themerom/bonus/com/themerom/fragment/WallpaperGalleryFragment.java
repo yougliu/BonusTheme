@@ -18,7 +18,7 @@ import android.widget.ViewSwitcher;
 
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.contants.Contacts;
-import themerom.bonus.com.themerom.utils.ThemeUtil;
+import themerom.bonus.com.themerom.utils.BonusImageUtil;
 
 /**
  * Created by bonus on 11/26/15.
@@ -67,7 +67,7 @@ public class WallpaperGalleryFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switcher.setImageResource(thumbnailIds[position]);
-                ThemeUtil.toast(mContext, "switch onclick " + position, Contacts.TOAST_SHORT_DURATION);
+                BonusImageUtil.toast(mContext, "switch onclick " + position, Contacts.TOAST_SHORT_DURATION);
             }
         });
 

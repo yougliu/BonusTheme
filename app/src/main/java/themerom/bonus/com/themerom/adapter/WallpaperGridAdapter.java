@@ -27,7 +27,7 @@ import java.util.Set;
 
 import libcore.io.DiskLruCache;
 import themerom.bonus.com.themerom.R;
-import themerom.bonus.com.themerom.utils.ThemeUtil;
+import themerom.bonus.com.themerom.utils.BonusImageUtil;
 
 /**
  * Created by bonus on 11/26/15.
@@ -57,11 +57,11 @@ public class WallpaperGridAdapter extends BaseAdapter{
         };
 
         try {
-            File cacheFile = ThemeUtil.getDiskCacheDir(context,"cache");
+            File cacheFile = BonusImageUtil.getDiskCacheDir(context, "cache");
             if(!cacheFile.exists()){
                 cacheFile.mkdirs();
             }
-            mDiskLruCache = DiskLruCache.open(cacheFile,ThemeUtil.getApplicationVersion(context),1,10*1024*1024);
+            mDiskLruCache = DiskLruCache.open(cacheFile, BonusImageUtil.getApplicationVersion(context),1,10*1024*1024);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -151,7 +151,7 @@ public class WallpaperGridAdapter extends BaseAdapter{
             FileInputStream inputStream = null;
             DiskLruCache.Snapshot snapshot = null;
             try {
-                final String key = ThemeUtil.hashkeyForDisk(imageUrl);
+                final String key = BonusImageUtil.hashkeyForDisk(imageUrl);
                 snapshot = mDiskLruCache.get(key);
                 if(snapshot == null){
                     //没有对应的缓存，load from network ，准备写入缓存

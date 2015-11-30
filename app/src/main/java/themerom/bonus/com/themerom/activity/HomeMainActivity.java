@@ -32,7 +32,7 @@ import themerom.bonus.com.themerom.entity.Preview;
 import themerom.bonus.com.themerom.entity.ThemeEntity;
 import themerom.bonus.com.themerom.entity.WallpaperEntity;
 import themerom.bonus.com.themerom.utils.OkHttpClientManager;
-import themerom.bonus.com.themerom.utils.ThemeUtil;
+import themerom.bonus.com.themerom.utils.BonusImageUtil;
 import themerom.bonus.com.themerom.view.GalleryViewPager;
 
 public class HomeMainActivity extends AppCompatActivity {
@@ -74,7 +74,7 @@ public class HomeMainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
                 //// TODO: 11/9/15
-                ThemeUtil.toast(HomeMainActivity.this, "viewpager ...", 0);
+                BonusImageUtil.toast(HomeMainActivity.this, "viewpager ...", 0);
             }
         });
         mClientManager = OkHttpClientManager.getInstance();
@@ -92,7 +92,7 @@ public class HomeMainActivity extends AppCompatActivity {
 
     //set no net work environment
     private void setNoNetWork() {
-        if(ThemeUtil.isNetWorkAvailable(HomeMainActivity.this)){
+        if(BonusImageUtil.isNetWorkAvailable(HomeMainActivity.this)){
             Contacts.getPixel(HomeMainActivity.this);
             Contacts.getUri();
             initRecomTheme();
@@ -272,7 +272,7 @@ public class HomeMainActivity extends AppCompatActivity {
 
     public void onEventMainThread(MsgEvent msg){
         Log.d("bonus","onEventMainThread");
-        ThemeUtil.toast(this,"onEventMainThread", Contacts.TOAST_SHORT_DURATION);
+        BonusImageUtil.toast(this, "onEventMainThread", Contacts.TOAST_SHORT_DURATION);
     }
 
     @Override
