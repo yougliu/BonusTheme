@@ -107,7 +107,6 @@ public class HomeMainActivity extends AppCompatActivity {
 
         mWallpaperEntitys.add(new WallpaperEntity(previews));
         mWallpaperEntitys.add(new WallpaperEntity(previews));
-
     }
 
     //pull recom wallpaper from net work
