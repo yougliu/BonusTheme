@@ -2,6 +2,7 @@ package themerom.bonus.com.themerom.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,8 +18,7 @@ import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
 import themerom.bonus.com.themerom.R;
-import themerom.bonus.com.themerom.contants.Contacts;
-import themerom.bonus.com.themerom.utils.BonusImageUtil;
+import themerom.bonus.com.themerom.activity.WallPaperImageActivity;
 
 /**
  * Created by bonus on 11/26/15.
@@ -32,6 +32,7 @@ public class WallpaperGalleryFragment extends Fragment {
     private Context mContext;
     private int[] thumbnailIds;
     private int[] originalIds;
+    private int mPosition;
 
     @Nullable
     @Override
@@ -55,7 +56,10 @@ public class WallpaperGalleryFragment extends Fragment {
         switcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 11/17/15
+                Intent intent = new Intent(getActivity(),WallPaperImageActivity.class);
+                intent.putExtra("position",mPosition);
+                intent.putExtra("originalIds",originalIds);
+                startActivity(intent);
             }
         });
 
@@ -67,7 +71,7 @@ public class WallpaperGalleryFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switcher.setImageResource(thumbnailIds[position]);
-                BonusImageUtil.toast(mContext, "switch onclick " + position, Contacts.TOAST_SHORT_DURATION);
+                mPosition = position;
             }
         });
 
@@ -75,6 +79,7 @@ public class WallpaperGalleryFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switcher.setImageResource(thumbnailIds[position]);
+                mPosition = position;
             }
 
             @Override
