@@ -1,5 +1,6 @@
 package themerom.bonus.com.themerom.callback;
 
+import android.graphics.Bitmap;
 import android.view.View;
 
 /**
@@ -9,7 +10,7 @@ import android.view.View;
 public interface BonusDisplayImageListener {
 
     void onLoadingStarted(String var1, View var2);
-    void onLoadingCompleted(String var1, View var2);
+    void onLoadingCompleted(String var1, View var2, Bitmap var3);
     void onLoadingFailed(String var1, View var2);
     void onLoadingCanceled(String var1, View var2);
 

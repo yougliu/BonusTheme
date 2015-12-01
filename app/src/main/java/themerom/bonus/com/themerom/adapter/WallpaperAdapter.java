@@ -19,6 +19,7 @@ import java.util.List;
 
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.entity.WallpaperEntity;
+import themerom.bonus.com.themerom.utils.BonusDisplayImageOptions;
 
 /**
  * Created by bonus on 11/14/15.
@@ -30,8 +31,16 @@ public class WallpaperAdapter extends BaseAdapter {
     private List<WallpaperEntity> mWallpaperList;
     private LayoutInflater mInflater;
     private DisplayImageOptions mOptions;
+    private BonusDisplayImageOptions bOptions;
     public WallpaperAdapter(Context context,List<WallpaperEntity> wallpaperList,DisplayImageOptions options){
         this.mOptions = options;
+        this.mContext = context;
+        this.mWallpaperList = wallpaperList;
+        mInflater = LayoutInflater.from(mContext);
+    }
+
+    public WallpaperAdapter(Context context,List<WallpaperEntity> wallpaperList,BonusDisplayImageOptions bOptions){
+        this.bOptions = bOptions;
         this.mContext = context;
         this.mWallpaperList = wallpaperList;
         mInflater = LayoutInflater.from(mContext);
@@ -89,6 +98,28 @@ public class WallpaperAdapter extends BaseAdapter {
                     holder.progressBar.setVisibility(View.GONE);
                 }
             });
+
+//            BonusImageLoader.getInstance(mContext).displayImage(holder.imageView, url, bOptions, new BonusDisplayImageListener() {
+//                @Override
+//                public void onLoadingStarted(String var1, View var2) {
+//                    holder.progressBar.setVisibility(View.VISIBLE);
+//                }
+//
+//                @Override
+//                public void onLoadingCompleted(String var1, View var2, Bitmap var3) {
+//                    holder.progressBar.setVisibility(View.GONE);
+//                }
+//
+//                @Override
+//                public void onLoadingFailed(String var1, View var2) {
+//                    holder.progressBar.setVisibility(View.GONE);
+//                }
+//
+//                @Override
+//                public void onLoadingCanceled(String var1, View var2) {
+//                    holder.progressBar.setVisibility(View.GONE);
+//                }
+//            });
         }
         return convertView;
     }

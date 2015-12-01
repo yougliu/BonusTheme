@@ -12,7 +12,7 @@
     <application
         android:name="themerom.bonus.com.themerom.application.ThemeApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/qsbk_app"
         android:label="@string/app_name"
         android:theme="@style/RomTheme" >
         <activity

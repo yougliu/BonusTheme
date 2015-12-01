@@ -31,6 +31,7 @@ import themerom.bonus.com.themerom.entity.MsgEvent;
 import themerom.bonus.com.themerom.entity.Preview;
 import themerom.bonus.com.themerom.entity.ThemeEntity;
 import themerom.bonus.com.themerom.entity.WallpaperEntity;
+import themerom.bonus.com.themerom.utils.BonusDisplayImageOptions;
 import themerom.bonus.com.themerom.utils.OkHttpClientManager;
 import themerom.bonus.com.themerom.utils.BonusImageUtil;
 import themerom.bonus.com.themerom.view.GalleryViewPager;
@@ -42,6 +43,7 @@ public class HomeMainActivity extends AppCompatActivity {
     private GalleryViewPager mGalleryViewPager;
     private LinearLayout mOvalLayout;
     DisplayImageOptions options;
+    private BonusDisplayImageOptions bOptions;
     private GridView mWallpaperGrid, mThemeGrid;
     private int[] imageArray = {R.drawable.roll_1, R.drawable.roll_2, R.drawable.roll_3};
     private static final int SWITCH_TIME = 5000;
@@ -63,6 +65,7 @@ public class HomeMainActivity extends AppCompatActivity {
         //for eventBus
         EventBus.getDefault().register(this);
         initImageOptions();
+        initBonusImageOptions();
         mGalleryViewPager = (GalleryViewPager) findViewById(R.id.id_galleryViewPager);
         mOvalLayout = (LinearLayout) findViewById(R.id.id_oval);
         mWallpaperGrid = (GridView) findViewById(R.id.id_grid_wallpaper);
@@ -83,7 +86,7 @@ public class HomeMainActivity extends AppCompatActivity {
         mThemeAdapter = new ThemeAdapter(HomeMainActivity.this,mThemeEntitys,options);
         mThemeGrid.setAdapter(mThemeAdapter);
 
-        mWallpapaerAdapter = new WallpaperAdapter(this,mWallpaperEntitys,options);
+        mWallpapaerAdapter = new WallpaperAdapter(this,mWallpaperEntitys,bOptions);
         mWallpaperGrid.setAdapter(mWallpapaerAdapter);
 
         mPreferences = this.getSharedPreferences(Contacts.SHARE_PREFERENCE, Context.MODE_PRIVATE);
@@ -201,7 +204,6 @@ public class HomeMainActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(Object response) {
-                Log.d("bonus", "response = " + response.toString());
                 String str = response.toString().substring(0,1);
                 if(!str.equals("[")){
                     return;
@@ -239,11 +241,19 @@ public class HomeMainActivity extends AppCompatActivity {
     private void initImageOptions() {
         options = new DisplayImageOptions.Builder()
                 .bitmapConfig(Bitmap.Config.ARGB_8888)
-                .cacheOnDisk(false)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
                 .considerExifParams(true)
                 .showImageForEmptyUri(R.drawable.ic_empty)
                 .showImageOnFail(R.drawable.ic_error)
                 .showImageOnLoading(R.drawable.ic_stub)
+                .build();
+    }
+
+    private void initBonusImageOptions(){
+        bOptions = new BonusDisplayImageOptions.Builder()
+                .cacheInDisk(true)
+                .cacheInMemory(true)
                 .build();
     }
 

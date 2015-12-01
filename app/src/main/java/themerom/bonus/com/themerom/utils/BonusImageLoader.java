@@ -2,13 +2,24 @@ package themerom.bonus.com.themerom.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.text.TextUtils;
+import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Set;
 
 import libcore.io.DiskLruCache;
@@ -24,7 +35,7 @@ public class BonusImageLoader {
     /**
      * for LruCache and DiskLruCache
      */
-
+    private static final String TAG = BonusImageLoader.class.getSimpleName();
     private Set<BitmapWorkTask> mWorkTasks;
     private static BonusImageLoader mInstance;
     private Context mContext;
@@ -81,6 +92,7 @@ public class BonusImageLoader {
     }
 
     private InputStream getStream(ImageView imageView, String urlPath, Context context){
+        InputStream inputStream = null;
         switch (getPathStyle(context,urlPath)){
             case HTTP_SCHEME_PATH:
                 break;
@@ -95,12 +107,15 @@ public class BonusImageLoader {
             case UNKOWN_SCHEME_PATH:
                 break;
         }
+        return inputStream;
     }
+
 
     private InputStream getStreamFromFile(String urlPath){
         if(urlPath != null){
-            
+
         }
+        return null;
     }
 
     /**
@@ -132,6 +147,11 @@ public class BonusImageLoader {
     }
 
     /**
+     * for net bitmap image display
+     * 1:check memory
+     * 2:check disk memory
+     * 3:net work
+     * 4:add lrumemory and disklrumemory
      * @param imageView
      * @param imagePath
      * @param options
@@ -139,11 +159,80 @@ public class BonusImageLoader {
      * @param progressListener
      */
     public void displayImage(ImageView imageView, String imagePath, BonusDisplayImageOptions options, BonusDisplayImageListener listener,BonusDownloadImageProgressListener progressListener){
+        Log.d(TAG, "display");
         if(imageView == null || imagePath == null){
             return ;
         }
 
+        if(options == null){
+            options = BonusDisplayImageOptions.newDefaultImageOptions();
+        }
+        initLruCache(mContext,options);
+        getPathStyle(mContext,imagePath);
 
+        Log.d(TAG,"---imagePath = "+imagePath);
+        if(mPathScheme == HTTP_SCHEME_PATH){
+            if(TextUtils.isEmpty(imagePath)){
+                if(listener != null){
+                    listener.onLoadingStarted(imagePath, imageView);
+                }
+                if(options.shouldShowImageForEmptyUrl()){
+                    imageView.setImageDrawable(options.getImageForEmptyUrl(imageView.getResources()));
+                }else{
+                    imageView.setImageDrawable(null);
+                }
+            }else{
+                //for url
+                if(listener != null){
+                    listener.onLoadingStarted(imagePath, imageView);
+                }
+                Bitmap bitmap = getBitmapFromCache(imagePath);
+                if(bitmap != null){
+                    imageView.setImageBitmap(bitmap);
+                    if(listener != null){
+                        listener.onLoadingCompleted(imagePath,imageView,bitmap);
+                    }
+                }else{
+                    //task from net work
+                    if(options.shouldShowImageOnLoading()){
+                        imageView.setImageDrawable(options.getImageOnLoading(imageView.getResources()));
+                    }
+                    BitmapWorkTask task = new BitmapWorkTask();
+                    task.execute(imagePath);
+                    try {
+                        DiskLruCache.Snapshot snapshot = mDiskLruCache.get(BonusImageUtil.hashkeyForDisk(imagePath));
+                        Log.d(TAG,"----snapshot = "+(snapshot == null));
+                        if(snapshot == null){
+                            if(listener != null){
+                                listener.onLoadingFailed(imagePath,imageView);
+                            }
+                            if(options.shouldShowImageOnFail()){
+                                imageView.setImageDrawable(options.getImageOnFail(imageView.getResources()));
+                            }
+                        }else{
+                            FileInputStream fInputStream = (FileInputStream) snapshot.getInputStream(0);
+                            FileDescriptor fileDescriptor = fInputStream.getFD();
+                            if(fileDescriptor != null){
+                                Bitmap finalBitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+                                imageView.setImageBitmap(finalBitmap);
+                                if(listener != null){
+                                    listener.onLoadingCompleted(imagePath,imageView,finalBitmap);
+                                }
+                            }else{
+                                if(listener != null){
+                                    listener.onLoadingFailed(imagePath,imageView);
+                                }
+                                if(options.shouldShowImageOnFail()){
+                                    imageView.setImageDrawable(options.getImageOnFail(imageView.getResources()));
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -162,13 +251,14 @@ public class BonusImageLoader {
             return ;
         }
 
-
+        this.displayImage(imageView,imagePath,options,listener,null);
     }
 
     public void displayImage(ImageView imageView, String imagePath, BonusDisplayImageOptions options, BonusDownloadImageProgressListener listener){
         if(imageView == null || imagePath == null){
             return ;
         }
+        this.displayImage(imageView,imagePath,options,null,listener);
     }
 
     public void displayImage(ImageView imageView, String imagePath, BonusDownloadImageProgressListener listener){
@@ -181,12 +271,14 @@ public class BonusImageLoader {
         if(imageView == null || imagePath == null){
             return ;
         }
+        this.displayImage(imageView,imagePath,options,null,null);
     }
 
     public void displayImage(ImageView imageView, String imagePath){
         if(imageView == null || imagePath == null){
             return ;
         }
+        this.displayImage(imageView,imagePath,null,null,null);
     }
 
     /**
@@ -194,11 +286,9 @@ public class BonusImageLoader {
      * @param key
      * @param bitmap
      */
-    public void addBitmapToCache(String key,Bitmap bitmap, BonusDisplayImageOptions options){
-        if(options.isCacheInMemory()){
-            if(getBitmapFromCache(key) == null){
-                mCache.put(key,bitmap);
-            }
+    public void addBitmapToCache(String key,Bitmap bitmap){
+        if(getBitmapFromCache(key) == null){
+            mCache.put(key,bitmap);
         }
     }
 
@@ -235,19 +325,109 @@ public class BonusImageLoader {
         }
     }
 
-    private
+    /**
+     * net work task
+     */
+    class BitmapWorkTask extends AsyncTask<String,Void,Void>{
 
-    class BitmapWorkTask extends AsyncTask<String,Void,Bitmap>{
+        private String imageUrl = null;
 
         @Override
-        protected Bitmap doInBackground(String... params) {
+        protected Void doInBackground(String... params) {
+            imageUrl = params[0];
+            if(imageUrl == null){
+                return null;
+            }
+            FileInputStream fileInputStream = null;
+            FileDescriptor fileDescriptor = null;
+            DiskLruCache.Snapshot snapshot = null;
+            try {
+                final String key = BonusImageUtil.hashkeyForDisk(imageUrl);
+                snapshot = mDiskLruCache.get(key);
+                Log.d(TAG,"SNAPSHOT = "+(snapshot == null));
+                if(snapshot == null){
+                    //准备写入缓存
+                    DiskLruCache.Editor editor = mDiskLruCache.edit(key);
+                    if(editor != null){
+                        OutputStream outputStream = editor.newOutputStream(0);
+                        //net work get outputstream
+                        if(downloadFromNetwork(imageUrl,outputStream)){
+                            Log.d(TAG,"commit = "+imageUrl);
+                            editor.commit();
+                        }else{
+                            Log.d(TAG,"abort = "+imageUrl);
+                            editor.abort();
+                        }
+                    }
+                    snapshot = mDiskLruCache.get(key);
+                }
+                if(snapshot != null){
+                    fileInputStream = (FileInputStream) snapshot.getInputStream(0);
+                    fileDescriptor = fileInputStream.getFD();
+                }
+                Bitmap bitmap = null;
+                if(fileDescriptor != null){
+                    bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+                    Log.d(TAG,"bitmap = "+(bitmap == null));
+                    if(bitmap != null){
+                        addBitmapToCache(imageUrl, bitmap);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally{
+                if(fileDescriptor == null && fileInputStream != null){
+                    try {
+                        fileInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
 
+        private boolean downloadFromNetwork(String urlString, OutputStream outputStream){
+            HttpURLConnection connection = null;
+            BufferedInputStream bInputStream = null;
+            BufferedOutputStream bOutputStream = null;
+            try {
+                URL url = new URL(urlString);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setReadTimeout(10*1000);
+                connection.setConnectTimeout(5000);
+                bInputStream = new BufferedInputStream(connection.getInputStream(),10*1024);
+                bOutputStream = new BufferedOutputStream(outputStream,10*1024);
+                int b;
+                while((b=bInputStream.read()) != -1){
+                    bOutputStream.write(b);
+                }
+                return true;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally{
+                if(connection != null){
+                    connection.disconnect();
+                }
+                if(bInputStream != null){
+                    try {
+                        bInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(bOutputStream != null){
+                    try {
+                        bOutputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return false;
         }
     }
 }
