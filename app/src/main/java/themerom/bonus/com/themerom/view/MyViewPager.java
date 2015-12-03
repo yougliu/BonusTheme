@@ -45,4 +45,19 @@ public class MyViewPager extends ViewPager{
             return super.onInterceptTouchEvent(ev);
         }
     }
+
+    @Override
+    public void scrollTo(int x, int y) {
+        super.scrollTo(x, y);
+    }
+
+    @Override
+    public void setCurrentItem(int item, boolean smoothScroll) {
+        super.setCurrentItem(item, smoothScroll);
+    }
+
+    @Override
+    public void setCurrentItem(int item) {
+        super.setCurrentItem(item);
+    }
 }

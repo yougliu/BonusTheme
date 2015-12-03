@@ -6,11 +6,11 @@
 
     <ImageView
         android:id="@+id/id_pager_image"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:layout_gravity="center"
-        android:scaleType="center"
+        android:scaleType="centerCrop"
         android:background="#dadada"/>
 
 </FrameLayout>

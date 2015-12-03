@@ -27,6 +27,7 @@
             android:gravity="right|center_vertical"
             android:text="Save to local"
             android:padding="10dp"
+            android:visibility="gone"
             android:textAllCaps="false"
             android:textColor="#FFFFFF" />
 
@@ -93,6 +94,7 @@
             android:gravity="left|center_vertical"
             android:textAllCaps="false"
             android:text="Save to local"
+            android:visibility="gone"
             android:padding="10dp"
             android:textColor="#FFFFFF" />
 
@@ -151,6 +153,7 @@
         android:background="#80A8A8A8"
         android:layout_marginLeft="100dp"
         android:layout_marginRight="100dp"
+        android:visibility="gone"
         android:id="@+id/id_drag"
         android:gravity="center" >
 
