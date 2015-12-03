@@ -26,4 +26,9 @@
         <attr name="degree" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="waterfallView">
+        <attr name="waterfallBackground" format="color" />
+        <attr name="columNum" format="integer" />
+    </declare-styleable>
+
 </resources>

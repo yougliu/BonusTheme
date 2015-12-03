@@ -7,4 +7,7 @@
     <string name="title">Theme Park</string>
     <string name="wallpaper_recommend">Wallpaper recommend</string>
     <string name="theme_recommend">Theme recommend</string>
+    <string name="image_url">imageUrl</string>
+    <string name="bolder_top">bolder_top</string>
+    <string name="bolder_bottom">bolder_bottom</string>
 </resources>

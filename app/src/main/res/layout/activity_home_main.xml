@@ -85,15 +85,25 @@
                     android:src="@drawable/dyanmic_wallpaper_icon"/>
 
             </LinearLayout>
-            <TextView
+
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:orientation="horizontal"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
                 android:layout_marginTop="1dp"
                 android:padding="4dp"
                 android:textColor="#000000"
                 android:background="#E0EEE0"
-                android:text="@string/wallpaper_recommend"/>
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wallpaper_recommend"/>
+
+
+            </LinearLayout>
 
             <themerom.bonus.com.themerom.view.CustomGridView
                 android:id="@+id/id_grid_wallpaper"
