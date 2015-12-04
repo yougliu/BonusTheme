@@ -151,7 +151,6 @@ public class WallpaperActivity extends Activity implements BackImage.OnBackClick
                 mStyle = Contacts.GRIDVIEW_STYLE;
                 mPreferences.edit().putInt(Contacts.WALLPAPER_STYLE,mStyle).commit();
                 int i = mPreferences.getInt(Contacts.WALLPAPER_STYLE,Contacts.GALLERY_STYLE);
-                Log.d("bonus","i = "+i);
                 if(mGridViewFragment == null){
                     mGridViewFragment = new WallpaperGridViewFragment();
                 }

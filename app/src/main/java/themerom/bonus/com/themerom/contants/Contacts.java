@@ -26,6 +26,10 @@ public class Contacts {
     public static final String GRIDVIEW_TAG = "gridview_tag";
     public static final String WATERFALL_TAG = "waterfall_tag";
 
+    public static final int TYPE_NET = 1;
+    public static final int TYPE_LOCAL = 2;
+    public static final String RESOURCE_TYPE = "resource_type";
+
 
     private static List<Preview> thumbPath = new ArrayList<>();
     private static List<Preview> originPath = new ArrayList<>();

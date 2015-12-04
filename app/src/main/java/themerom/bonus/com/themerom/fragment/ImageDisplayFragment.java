@@ -25,12 +25,16 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -38,6 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import themerom.bonus.com.themerom.R;
+import themerom.bonus.com.themerom.contants.Contacts;
 import themerom.bonus.com.themerom.view.MyViewPager;
 
 /**
@@ -52,12 +57,13 @@ public class ImageDisplayFragment extends Fragment implements View.OnClickListen
     private LinearLayout mLayoutLeft;
     private LinearLayout mLayoutRight;
     private LinearLayout mLayoutDrag;
-    private Map<Integer,ImageView> imageViewMap = new HashMap<>();
+    private Map<String,ImageView> imageViewMap = new HashMap<>();
     private Button mSave,mSetWallpaper,mSetLockpaper,mZambia,mClose;
     private MyViewPager mViewPager;
     private ImageView mDrag;
     private int mPosition;
     private int[] originalIds;
+    private int resourceType;
     private ViewPagerAdapter mAdapter;
     private boolean dragStatus;
     private int popStatus = 0;
@@ -198,6 +204,7 @@ public class ImageDisplayFragment extends Fragment implements View.OnClickListen
 
         mPosition = getArguments().getInt("position");
         originalIds = getArguments().getIntArray("originalIds");
+        resourceType = getArguments().getInt(Contacts.RESOURCE_TYPE);
         mAdapter = new ViewPagerAdapter();
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(0);
@@ -241,7 +248,6 @@ public class ImageDisplayFragment extends Fragment implements View.OnClickListen
             @Override
             public void onPageSelected(int position) {
                 mPosition = position;
-                Log.d(TAG,"onpagese mposition = "+mPosition);
             }
 
             @Override
@@ -440,11 +446,31 @@ public class ImageDisplayFragment extends Fragment implements View.OnClickListen
         if(mWallpaperManager == null){
             mWallpaperManager = WallpaperManager.getInstance(getActivity());
         }
-        int resourceId = originalIds[mPosition -1];
-        try {
-            mWallpaperManager.setResource(resourceId);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(resourceType == 2){
+            int resourceId = originalIds[mPosition -1];
+            try {
+                mWallpaperManager.setResource(resourceId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(resourceType == 1){
+            String path = Contacts.getOriginPath().get(mPosition - 1).getPath();
+            File file = ImageLoader.getInstance().getDiskCache().get(new Md5FileNameGenerator().generate(path));
+            Log.d(TAG,"network = "+(file == null)+", "+path+", "+new Md5FileNameGenerator().generate(path));
+            Bitmap cache = ImageLoader.getInstance().getMemoryCache().get(path);
+            Log.d(TAG,"memory cache = "+(cache == null));
+            try {
+                if(file != null){
+                    FileInputStream fileInputStream = new FileInputStream(file);
+                    Bitmap bitmap = BitmapFactory.decodeStream(fileInputStream);
+                    Log.d(TAG,"network = "+(bitmap == null)+", "+path);
+                    mWallpaperManager.setBitmap(bitmap);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
 //        Drawable resourceDrawable = getResources().getDrawable(resourceId);
@@ -467,7 +493,12 @@ public class ImageDisplayFragment extends Fragment implements View.OnClickListen
 
         @Override
         public int getCount() {
-            return originalIds != null ? originalIds.length: 0;
+            if(resourceType == 1){
+                return Contacts.getOriginPath().size();
+            }else if(resourceType == 2){
+                return originalIds != null ? originalIds.length: 0;
+            }
+            return 0;
         }
 
         @Override
@@ -479,7 +510,14 @@ public class ImageDisplayFragment extends Fragment implements View.OnClickListen
         public Object instantiateItem(ViewGroup container, int position) {
             View view = LayoutInflater.from(getActivity()).inflate(R.layout.image_pager_item_layout,container,false);
             ImageView imageView = (ImageView) view.findViewById(R.id.id_pager_image);
-            ImageLoader.getInstance().displayImage("drawable://"+originalIds[position],imageView,mOptions);
+            String url = null;
+            if(resourceType == 2){
+                url = "drawable://"+originalIds[position];
+            }else if(resourceType == 1){
+                url = Contacts.getOriginPath().get(position).getPath();
+            }
+            Log.d(TAG,"url = "+url);
+            ImageLoader.getInstance().displayImage(url,imageView,mOptions);
             mPosition = position;
 //            Drawable drawable = getResources().getDrawable(originalIds[position]);
 //            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
@@ -492,14 +530,20 @@ public class ImageDisplayFragment extends Fragment implements View.OnClickListen
 //            }
 //            mLayoutDrag.setVisibility(dragStatus?View.VISIBLE:View.GONE);
             container.addView(view,0);
-            imageViewMap.put(originalIds[position], imageView);
+            imageViewMap.put(url, imageView);
             return view;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
-            imageViewMap.remove(originalIds[position]);
+            String url = null;
+            if(resourceType == 2){
+                url = "drawable://"+originalIds[position];
+            }else if(resourceType == 1){
+                url = Contacts.getOriginPath().get(position).getPath();
+            }
+            imageViewMap.remove(url);
         }
     }
 }

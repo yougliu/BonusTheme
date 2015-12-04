@@ -32,11 +32,11 @@ import themerom.bonus.com.themerom.entity.Preview;
 import themerom.bonus.com.themerom.entity.ThemeEntity;
 import themerom.bonus.com.themerom.entity.WallpaperEntity;
 import themerom.bonus.com.themerom.utils.BonusDisplayImageOptions;
-import themerom.bonus.com.themerom.utils.OkHttpClientManager;
 import themerom.bonus.com.themerom.utils.BonusImageUtil;
+import themerom.bonus.com.themerom.utils.OkHttpClientManager;
 import themerom.bonus.com.themerom.view.GalleryViewPager;
 
-public class HomeMainActivity extends AppCompatActivity {
+public class HomeMainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = HomeMainActivity.class.getSimpleName();
     private final String mPageName = "HomeMainActivity";
@@ -54,6 +54,7 @@ public class HomeMainActivity extends AppCompatActivity {
     private WallpaperAdapter mWallpapaerAdapter;
     private OkHttpClientManager mClientManager;
     private SharedPreferences mPreferences;
+    private List<WallpaperEntity> netWorkWallpaper = new ArrayList<>();
 
 
     @Override
@@ -128,19 +129,19 @@ public class HomeMainActivity extends AppCompatActivity {
                     return;
                 }
                 Gson gson = new Gson();
-                List<WallpaperEntity> wallpaperEntities = new ArrayList<WallpaperEntity>();
-                wallpaperEntities = gson.fromJson(response.toString(),new TypeToken<List<WallpaperEntity>>(){}.getType());
-                if(wallpaperEntities.size() > 0){
+
+                netWorkWallpaper = gson.fromJson(response.toString(),new TypeToken<List<WallpaperEntity>>(){}.getType());
+                if(netWorkWallpaper.size() > 0){
                     mWallpaperEntitys.clear();
                     for (int i = 0;i<2;i++){
-                        mWallpaperEntitys.add(wallpaperEntities.get(i));
+                        mWallpaperEntitys.add(netWorkWallpaper.get(i));
                     }
                 }
                 mWallpaperGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if(mWallpaperEntitys != null){
-                            setWallpaperPath(mWallpaperEntitys);
+                            setWallpaperPath(netWorkWallpaper);
                             //startactivity
                             StartWallpaperActivity(position);
                         }
@@ -156,7 +157,10 @@ public class HomeMainActivity extends AppCompatActivity {
      * @param position
      */
     private void StartWallpaperActivity(int position) {
-        // TODO: 11/19/15
+        Intent intent = new Intent(HomeMainActivity.this,WallPaperImageActivity.class);
+        intent.putExtra("position",position);
+        intent.putExtra(Contacts.RESOURCE_TYPE,Contacts.TYPE_NET);
+        startActivity(intent);
     }
 
     public void setWallpaperPath(List<WallpaperEntity> entitys){
@@ -312,4 +316,11 @@ public class HomeMainActivity extends AppCompatActivity {
         super.onStop();
     }
 
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id){
+        }
+    }
 }

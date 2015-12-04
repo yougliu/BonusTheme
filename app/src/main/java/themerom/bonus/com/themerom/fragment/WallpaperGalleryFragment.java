@@ -19,6 +19,7 @@ import android.widget.ViewSwitcher;
 
 import themerom.bonus.com.themerom.R;
 import themerom.bonus.com.themerom.activity.WallPaperImageActivity;
+import themerom.bonus.com.themerom.contants.Contacts;
 
 /**
  * Created by bonus on 11/26/15.
@@ -58,6 +59,7 @@ public class WallpaperGalleryFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),WallPaperImageActivity.class);
                 intent.putExtra("position",mPosition);
+                intent.putExtra(Contacts.RESOURCE_TYPE,Contacts.TYPE_LOCAL);
                 intent.putExtra("originalIds",originalIds);
                 startActivity(intent);
             }
