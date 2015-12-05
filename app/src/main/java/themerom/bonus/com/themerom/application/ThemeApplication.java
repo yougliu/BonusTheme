@@ -9,6 +9,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import org.xutils.x;
+
 /**
  * Created by helios on 11/7/15.
  */
@@ -32,5 +34,6 @@ public class ThemeApplication extends Application {
                 .threadPoolSize(5)
                 .tasksProcessingOrder(QueueProcessingType.FIFO);
         ImageLoader.getInstance().init(config.build());
+        x.Ext.init(this);
     }
 }

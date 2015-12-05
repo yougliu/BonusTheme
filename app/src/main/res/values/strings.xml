@@ -10,4 +10,11 @@
     <string name="image_url">imageUrl</string>
     <string name="bolder_top">bolder_top</string>
     <string name="bolder_bottom">bolder_bottom</string>
+
+    <string name="download">Download</string>
+    <string name="pause">Pause</string>
+    <string name="cancel">Cancel</string>
+    <string name="application">Application</string>
+    <string name="download_failed">Download Failed</string>
+    <string name="download_continue">Continue</string>
 </resources>
