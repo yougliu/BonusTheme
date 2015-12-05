@@ -1,5 +1,7 @@
 package themerom.bonus.com.themerom.xutils3;
 
+import android.util.Log;
+
 import org.xutils.DbManager;
 import org.xutils.common.Callback;
 import org.xutils.common.task.PriorityExecutor;
@@ -40,11 +42,12 @@ public final class DownloadManager {
             List<DownloadInfo> infoList = db.selector(DownloadInfo.class).findAll();
             if (infoList != null) {
                 for (DownloadInfo info : infoList) {
-                    if(info.getState().value() == DownloadState.STOPPED.value()){
-                        info.setState(DownloadState.STOPPED);
-                    }else if (info.getState().value() == DownloadState.FINISHED.value()) {
-                        info.setState(DownloadState.STARTED);
-                    }
+                    Log.d("Bonus","downloadmanager state = "+info.getState().value());
+//                    if(info.getState().value() == DownloadState.STARTED.value()){
+//                        info.setState(DownloadState.STARTED);
+//                    }else if (info.getState().value() < DownloadState.FINISHED.value()) {
+//                        info.setState(DownloadState.STOPPED);
+//                    }
                     downloadInfoList.add(info);
                 }
             }
@@ -131,6 +134,7 @@ public final class DownloadManager {
         if (downloadInfoList.contains(downloadInfo)) {
             downloadInfoList.remove(downloadInfo);
         }
+        Log.d("Bonus","start state = "+downloadInfo.getState().value());
         downloadInfoList.add(downloadInfo);
     }
 
