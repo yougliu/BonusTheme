@@ -11,8 +11,17 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs{
+        releaseConfig{
+            keyAlias 'BonusTheme'
+            keyPassword '90lyg423'
+            storeFile file('/home/helios/worksource/Code/studioCode')
+            storePassword '90lyg423'
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.releaseConfig
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

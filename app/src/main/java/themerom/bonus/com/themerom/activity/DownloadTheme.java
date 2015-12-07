@@ -1,7 +1,12 @@
 package themerom.bonus.com.themerom.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -43,7 +48,7 @@ import themerom.bonus.com.themerom.xutils3.DownloadViewHolder;
  * Class name ${type_name}
  * http://muldown.fuli365.net/online_wallpaper/topicapk/com.shly.theme.doraemon.apk
  */
-public class DownloadTheme extends Activity implements BackImage.OnBackClickListener{
+public class DownloadTheme extends Activity implements BackImage.OnBackClickListener {
     private static final String TAG = DownloadTheme.class.getSimpleName();
     private BackImage backView;
     private TextView mThemeTitle;
@@ -55,6 +60,7 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
     private TextView mTitle;
     private ImageView actionbarSet;
     private String apkName;
+    private SharedPreferences mPreferences;
     //for xutils3
     private DownloadManager manager;
     private DownloadItemViewHolder holder;
@@ -64,6 +70,7 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.download_theme_layout);
         mThemeEntity = (ThemeEntity) getIntent().getExtras().getSerializable(Contacts.DOWNLOAD_THEME_ENTITY);
+        mPreferences = getSharedPreferences(Contacts.SHARE_PREFERENCE, Context.MODE_PRIVATE);
         initOptions();
         initView();
         mTitle.setText(mThemeEntity.getThemename());
@@ -73,17 +80,19 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
                 mThemeEntity.getPackageName().lastIndexOf("."));
         String label = apkName;
         try {
-            manager.startDownload(mThemeEntity.getPackageName(),label,"/sdcard/xUtils/"+mThemeEntity.getThemename()+".apk",false,false,null);
+            if (!mPreferences.getBoolean(apkName, false)) {
+                manager.startDownload(mThemeEntity.getPackageName(), label, "/sdcard/xUtils/" + mThemeEntity.getThemename() + ".apk", false, false, null);
+            }
         } catch (DbException e) {
             e.printStackTrace();
         }
 
         DownloadInfo downloadInfo = manager.getDownloadInfo(0);
-        Log.d(TAG,"downloadInfo = "+(downloadInfo == null)+", "+apkName);
-        if(downloadInfo != null){
+        Log.d(TAG, "downloadInfo = " + (downloadInfo == null) + ", " + apkName);
+        if (downloadInfo != null) {
             holder = new DownloadItemViewHolder(download, downloadInfo);
             holder.refresh();
-            Log.d(TAG,"downloadInfo state= "+downloadInfo.getState().value());
+            Log.d(TAG, "downloadInfo state= " + downloadInfo.getState().value());
             if (downloadInfo.getState().value() < DownloadState.FINISHED.value()) {
                 try {
                     manager.startDownload(
@@ -182,12 +191,12 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
             refresh();
         }
 
-        @Event(R.id.id_button_download)//for click
+        @Event(R.id.id_button_download)//for click download
         private void toggleEvent(View view) {
             DownloadState state = downloadInfo.getState();
             switch (state) {
                 case WAITING:
-                    Log.d(TAG,"waiting");
+                    Log.d(TAG, "waiting");
                     try {
                         manager.startDownload(
                                 downloadInfo.getUrl(),
@@ -200,13 +209,13 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
                         Toast.makeText(x.app(), "添加下载失败", Toast.LENGTH_LONG).show();
                     }
                 case STARTED:
-                    Log.d(TAG,"started");
+                    Log.d(TAG, "started");
                     manager.stopDownload(downloadInfo);
                     break;
                 case ERROR:
-                    Log.d(TAG,"error");
+                    Log.d(TAG, "error");
                 case STOPPED:
-                    Log.d(TAG,"stopped");
+                    Log.d(TAG, "stopped");
                     try {
                         manager.startDownload(
                                 downloadInfo.getUrl(),
@@ -220,12 +229,27 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
                     }
                     break;
                 case FINISHED:
-                    Log.d(TAG,"finished");
+                    Log.d(TAG, "finished");
                     Toast.makeText(x.app(), "已经下载完成", Toast.LENGTH_LONG).show();
+                    // TODO: 12/7/15 install apk
+                    PackageManager packageManager = getPackageManager();
+                    try {
+                        PackageInfo info = packageManager.getPackageInfo(apkName, 0);
+
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     break;
             }
+        }
+
+        @Event(R.id.id_button_delete)
+        private void toggleDelete(View view) {
+            BonusImageUtil.toast(DownloadTheme.this, "delete", Contacts.TOAST_SHORT_DURATION);
+            mPreferences.edit().remove(apkName).commit();
+            // TODO: 12/7/15 delete apk         
         }
 
         @Override
@@ -270,23 +294,25 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
             DownloadState state = downloadInfo.getState();
             switch (state) {
                 case WAITING:
-                    Log.d(TAG,"refresh waiting");
+                    Log.d(TAG, "refresh waiting");
                 case STARTED:
-                    Log.d(TAG,"refresh started ");
-                    download.setText(downloadInfo.getProgress()+"%");
+                    Log.d(TAG, "refresh started ");
+                    download.setText(downloadInfo.getProgress() + "%");
                     zambia.setVisibility(View.GONE);
                     break;
                 case ERROR:
-                    Log.d(TAG,"refresh error");
-                    BonusImageUtil.toast(DownloadTheme.this,"网络链接错误或网速较低，以断开链接！",Contacts.TOAST_SHORT_DURATION);
+                    Log.d(TAG, "refresh error");
+                    BonusImageUtil.toast(DownloadTheme.this, "网络链接错误或网速较低，以断开链接！", Contacts.TOAST_SHORT_DURATION);
                 case STOPPED:
-                    Log.d(TAG,"refresh stopped");
+                    Log.d(TAG, "refresh stopped");
                     download.setText(x.app().getString(R.string.download_continue));
                     break;
                 case FINISHED:
-                    Log.d(TAG,"refresh finished");
+                    Log.d(TAG, "refresh finished");
                     download.setText(x.app().getString(R.string.application));
-                    zambia.setVisibility(View.GONE);
+                    zambia.setVisibility(View.VISIBLE);
+                    mPreferences.edit().putBoolean(apkName, true).commit();
+                    delete.setVisibility(View.VISIBLE);
                     break;
                 default:
                     download.setText(x.app().getString(R.string.download));
@@ -295,7 +321,7 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
         }
     }
 
-    class DownloadThemeAdapter extends PagerAdapter{
+    class DownloadThemeAdapter extends PagerAdapter {
 
         @Override
         public int getCount() {
@@ -314,12 +340,35 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            View view = LayoutInflater.from(DownloadTheme.this).inflate(R.layout.image_pager_item_layout,container,false);
+            View view = LayoutInflater.from(DownloadTheme.this).inflate(R.layout.image_pager_item_layout, container, false);
             ImageView imageView = (ImageView) view.findViewById(R.id.id_pager_image);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            ImageLoader.getInstance().displayImage(mThemeEntity.getImageList().get(position).getPath(),imageView,options);
+            ImageLoader.getInstance().displayImage(mThemeEntity.getImageList().get(position).getPath(), imageView, options);
             container.addView(view);
             return view;
+        }
+    }
+
+    class SetThemeTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                Class<?> activityManagerNative = Class.forName("android.app.ActivityManagerNative");
+                Object am = activityManagerNative.getMethod("getDefault",activityManagerNative);
+                Object config = am.getClass().getMethod("getConfiguration",am.getClass());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            BonusImageUtil.toast(DownloadTheme.this, "set theme", Contacts.TOAST_SHORT_DURATION);
         }
     }
 }
