@@ -109,4 +109,31 @@ public class BonusImageUtil {
         return context.getResources().getDisplayMetrics().densityDpi == 480;
     }
 
+    //file name
+    public static String getFileName(String url){
+        if(url == null){
+            return null;
+        }
+        return url.substring(url.lastIndexOf("/")+1);
+    }
+
+    //转换storage
+    public static String convertStorage(long size){
+        long kb = 1024;
+        long mb = kb*1024;
+        long gb = mb*1024;
+        if(size >= gb){
+            return String.format("%.1f GB",(float)size/gb);
+        }else if(size >= mb){
+            float f = size/mb;
+            return String.format(f>100 ? "%.0f MB" : "%.1f MB",f);
+        }else if(size >= kb){
+            float f = size/kb;
+            return String.format(f>100 ? "%.0f KB" : "%.1f KB", f);
+        }else if(size <= 0){
+            return String.format("%d B",0);
+        }else{
+            return String.format("%d B", size);
+        }
+    }
 }

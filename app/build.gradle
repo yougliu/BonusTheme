@@ -15,14 +15,15 @@ android {
         releaseConfig{
             keyAlias 'BonusTheme'
             keyPassword '90lyg423'
-            storeFile file('/home/helios/worksource/Code/studioCode')
+            storeFile file('/home/helios/worksource/Code/studioCode/bonustheme.jks')
             storePassword '90lyg423'
         }
     }
     buildTypes {
         release {
             signingConfig signingConfigs.releaseConfig
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

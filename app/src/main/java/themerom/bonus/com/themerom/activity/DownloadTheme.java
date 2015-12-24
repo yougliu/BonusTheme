@@ -1,13 +1,19 @@
 package themerom.bonus.com.themerom.activity;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -32,7 +38,9 @@ import java.io.File;
 
 import de.greenrobot.event.EventBus;
 import themerom.bonus.com.themerom.R;
+import themerom.bonus.com.themerom.callback.ProgressListener;
 import themerom.bonus.com.themerom.contants.Contacts;
+import themerom.bonus.com.themerom.db.DownloadDao;
 import themerom.bonus.com.themerom.entity.MsgEvent;
 import themerom.bonus.com.themerom.entity.ThemeEntity;
 import themerom.bonus.com.themerom.utils.BonusImageUtil;
@@ -48,8 +56,8 @@ import themerom.bonus.com.themerom.xutils3.DownloadViewHolder;
  * Class name ${type_name}
  * http://muldown.fuli365.net/online_wallpaper/topicapk/com.shly.theme.doraemon.apk
  */
-public class DownloadTheme extends Activity implements BackImage.OnBackClickListener {
-    private static final String TAG = DownloadTheme.class.getSimpleName();
+public class DownloadTheme extends Activity implements BackImage.OnBackClickListener,View.OnClickListener{
+    private static final String TAG = "BTAG";
     private BackImage backView;
     private TextView mThemeTitle;
     private ViewPager mViewPager;
@@ -64,6 +72,94 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
     //for xutils3
     private DownloadManager manager;
     private DownloadItemViewHolder holder;
+    //for custom break point download
+    private DownloadService mService;
+    private themerom.bonus.com.themerom.service.DownloadService.MyBinder myBinder;
+    private String url = "http://muldown.fuli365.net/online_wallpaper/topicapk/com.shly.theme.doraemon.apk";
+    private String mLabel;
+    private String mSavePath;
+    private String mFileName;
+    private int mThreadSize;
+    private static final int SEND_MAX_CODE = 0x01;
+    private static final int SEND_PROGRESS_CODE = 0x02;
+    private static final int SEND_SUCCESS_CODE = 0x03;
+    private static final int SEND_FAILED_CODE = 0x04;
+    private long maxLenght;
+    private String convertMax;
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            myBinder = (themerom.bonus.com.themerom.service.DownloadService.MyBinder) service;
+            Log.d(TAG,"onServiceConnected myBinder = "+(myBinder == null));
+            myBinder.download(url, mSavePath, new ProgressListener() {
+                @Override
+                public void setMax(long max) {
+                    maxLenght = max;
+                    String maxString = BonusImageUtil.convertStorage(max);
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = SEND_MAX_CODE;
+                    msg.obj = maxString;
+                    mHandler.sendMessage(msg);
+                }
+
+                @Override
+                public void setProgress(long progress) {
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = SEND_PROGRESS_CODE;
+                    msg.obj = progress;
+                    mHandler.sendMessage(msg);
+                }
+
+                @Override
+                public void onSuccess(String result) {
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = SEND_SUCCESS_CODE;
+                    msg.obj = result;
+                    mHandler.sendMessage(msg);
+                }
+
+                @Override
+                public void onFailed(String result, Exception e) {
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = SEND_FAILED_CODE;
+                    msg.obj = e;
+                    mHandler.sendMessage(msg);
+                }
+            },mThreadSize,mLabel,mFileName);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.d(TAG,"onServiceDisconnected name = "+name);
+        }
+    };
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case SEND_MAX_CODE:
+                    String str = (String) msg.obj;
+                    convertMax = str;
+                    download.setText("大小："+str);
+                    break;
+                case SEND_PROGRESS_CODE:
+                    long progress = (long) msg.obj;
+                    int percent = (int) (progress*100/maxLenght);
+                    download.setText("下载："+percent+" / "+convertMax);
+                    break;
+                case SEND_SUCCESS_CODE:
+                    download.setText("应用");
+                    break;
+                case SEND_FAILED_CODE:
+                    Exception e = (Exception) msg.obj;
+                    Log.d(TAG,"download fail "+e.toString());
+                    download.setText("下载");
+                    Toast.makeText(DownloadTheme.this,"请检查网络链接，重新下载！",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,34 +175,40 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
                 mThemeEntity.getPackageName().lastIndexOf("/") + 1,
                 mThemeEntity.getPackageName().lastIndexOf("."));
         String label = apkName;
-        try {
-            if (!mPreferences.getBoolean(apkName, false)) {
-                manager.startDownload(mThemeEntity.getPackageName(), label, "/sdcard/xUtils/" + mThemeEntity.getThemename() + ".apk", false, false, null);
-            }
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-
-        DownloadInfo downloadInfo = manager.getDownloadInfo(0);
-        Log.d(TAG, "downloadInfo = " + (downloadInfo == null) + ", " + apkName);
-        if (downloadInfo != null) {
-            holder = new DownloadItemViewHolder(download, downloadInfo);
-            holder.refresh();
-            Log.d(TAG, "downloadInfo state= " + downloadInfo.getState().value());
-            if (downloadInfo.getState().value() < DownloadState.FINISHED.value()) {
-                try {
-                    manager.startDownload(
-                            downloadInfo.getUrl(),
-                            downloadInfo.getLabel(),
-                            downloadInfo.getFileSavePath(),
-                            downloadInfo.isAutoResume(),
-                            downloadInfo.isAutoRename(),
-                            holder);
-                } catch (DbException ex) {
-                    Toast.makeText(x.app(), "添加下载失败", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
+        mLabel = label;
+        mSavePath = BonusImageUtil.getStoragePath(this)+"/sdcard/breakPoint/";
+        mFileName = mThemeEntity.getThemename()+".apk";
+        mThreadSize = Runtime.getRuntime().availableProcessors();
+        //note for close xutils3 start
+//        try {
+//            if (!mPreferences.getBoolean(apkName, false)) {
+//                manager.startDownload(mThemeEntity.getPackageName(), label, "/sdcard/xUtils/" + mThemeEntity.getThemename() + ".apk", false, false, null);
+//            }
+//        } catch (DbException e) {
+//            e.printStackTrace();
+//        }
+//
+//        DownloadInfo downloadInfo = manager.getDownloadInfo(0);
+//        Log.d(TAG, "downloadInfo = " + (downloadInfo == null) + ", " + apkName);
+//        if (downloadInfo != null) {
+//            holder = new DownloadItemViewHolder(download, downloadInfo);
+//            holder.refresh();
+//            Log.d(TAG, "downloadInfo state= " + downloadInfo.getState().value());
+//            if (downloadInfo.getState().value() < DownloadState.FINISHED.value()) {
+//                try {
+//                    manager.startDownload(
+//                            downloadInfo.getUrl(),
+//                            downloadInfo.getLabel(),
+//                            downloadInfo.getFileSavePath(),
+//                            downloadInfo.isAutoResume(),
+//                            downloadInfo.isAutoRename(),
+//                            holder);
+//                } catch (DbException ex) {
+//                    Toast.makeText(x.app(), "添加下载失败", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }
+        //note for close xutils3 end
     }
 
     private void initOptions() {
@@ -131,6 +233,7 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
         mViewPager.setAdapter(mAdapter);
         zambia = (Button) findViewById(R.id.id_button_zambia);
         download = (Button) findViewById(R.id.id_button_download);
+        download.setOnClickListener(this);
         delete = (Button) findViewById(R.id.id_button_delete);
         mTitle = (TextView) findViewById(R.id.id_actionbar_title);
         actionbarSet = (ImageView) findViewById(R.id.id_set);
@@ -144,45 +247,71 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
         finish();
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        int id = v.getId();
-//        switch (id) {
-//            case R.id.id_button_download:
-//                if(zambia.getVisibility() == View.VISIBLE){
-//                    zambia.setVisibility(View.GONE);
-//                }
-//                //start service
-//                Log.d(TAG,"URL = "+mThemeEntity.getPackageName());
-//
-//                DownloadInfo downloadInfo = manager.getDownloadInfo(0);
-//                if(downloadInfo != null){
-//                    Log.d(TAG,"downloadInfo = "+(downloadInfo == null));
-//                    DownloadItemViewHolder holder = new DownloadItemViewHolder(download, downloadInfo);
-//                    holder.update(downloadInfo);
-//                    if (downloadInfo.getState().value() < DownloadState.FINISHED.value()) {
-//                        try {
-//                            manager.startDownload(
-//                                    downloadInfo.getUrl(),
-//                                    downloadInfo.getLabel(),
-//                                    downloadInfo.getFileSavePath(),
-//                                    downloadInfo.isAutoResume(),
-//                                    downloadInfo.isAutoRename(),
-//                                    holder);
-//                        } catch (DbException ex) {
-//                            Toast.makeText(x.app(), "添加下载失败", Toast.LENGTH_LONG).show();
-//                        }
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.id_button_download:
+                if(zambia.getVisibility() == View.VISIBLE){
+                    zambia.setVisibility(View.GONE);
+                }
+                //start service
+                if(!BonusImageUtil.isNetWorkAvailable(this)){
+                    return;
+                }
+                Intent downloadService = new Intent(DownloadTheme.this,DownloadService.class);
+                boolean b = bindService(downloadService, conn, Context.BIND_AUTO_CREATE);
+                Log.d(TAG,"b = "+b);
+                if(DownloadDao.isDownLoad){
+                    DownloadDao.isDownLoad = false;
+                    download.setText("暂停");
+                }else{
+                    DownloadDao.isDownLoad = true;
+                }
+//                myBinder.download(url, mSavePath, new ProgressListener() {
+//                    @Override
+//                    public void setMax(long max) {
+//                        maxLenght = max;
+//                        String maxString = BonusImageUtil.convertStorage(max);
+//                        Message msg = mHandler.obtainMessage();
+//                        msg.what = SEND_MAX_CODE;
+//                        msg.obj = maxString;
+//                        mHandler.sendMessage(msg);
 //                    }
-//                }
-//                break;
-//            case R.id.id_button_zambia:
-//                break;
-//            case R.id.id_button_delete:
-//                break;
-//            default:
-//                break;
-//        }
-//    }
+//
+//                    @Override
+//                    public void setProgress(long progress) {
+//                        Message msg = mHandler.obtainMessage();
+//                        msg.what = SEND_PROGRESS_CODE;
+//                        msg.obj = progress;
+//                        mHandler.sendMessage(msg);
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(String result) {
+//                        Message msg = mHandler.obtainMessage();
+//                        msg.what = SEND_SUCCESS_CODE;
+//                        msg.obj = result;
+//                        mHandler.sendMessage(msg);
+//                    }
+//
+//                    @Override
+//                    public void onFailed(String result, Exception e) {
+//                        Message msg = mHandler.obtainMessage();
+//                        msg.what = SEND_FAILED_CODE;
+//                        msg.obj = e;
+//                        mHandler.sendMessage(msg);
+//                    }
+//                },mThreadSize,mLabel,mFileName);
+                break;
+            case R.id.id_button_zambia:
+                break;
+            case R.id.id_button_delete:
+                break;
+            default:
+                break;
+        }
+    }
 
     class DownloadItemViewHolder extends DownloadViewHolder {
 
@@ -370,5 +499,13 @@ public class DownloadTheme extends Activity implements BackImage.OnBackClickList
             super.onPreExecute();
             BonusImageUtil.toast(DownloadTheme.this, "set theme", Contacts.TOAST_SHORT_DURATION);
         }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
+        unbindService(conn);
     }
 }
